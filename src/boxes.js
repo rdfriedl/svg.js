@@ -1,6 +1,9 @@
-SVG.BBox = SVG.invent({
-  // Initialize
-  create: function(element) {
+import Element from 'element.js';
+import Shape from 'shape.js';
+import {extend} from 'svg.js';
+import {fullBox} from 'helpers.js';
+export class BBox{
+  constructor(element){
     // get values if element is given
     if (element) {
       var box
@@ -10,7 +13,7 @@ SVG.BBox = SVG.invent({
         // find native bbox
         box = element.node.getBBox()
       } catch(e) {
-        if(element instanceof SVG.Shape){
+        if(element instanceof Shape){
           var clone = element.clone().addTo(SVG.parser.draw)
           box = clone.bbox()
           clone.remove()
@@ -23,7 +26,7 @@ SVG.BBox = SVG.invent({
           }
         }
       }
-      
+
       // plain x and y
       this.x = box.x
       this.y = box.y
@@ -36,28 +39,22 @@ SVG.BBox = SVG.invent({
     // add center, right and bottom
     fullBox(this)
   }
+}
 
-  // Define Parent
-, parent: SVG.Element
-
-  // Constructor
-, construct: {
+extend(Element, {
     // Get bounding box
     bbox: function() {
-      return new SVG.BBox(this)
+      return new BBox(this)
     }
-  }
-
 })
 
-SVG.TBox = SVG.invent({
-  // Initialize
-  create: function(element) {
+export class TBox{
+  constructor(element){
     // get values if element is given
     if (element) {
       var t   = element.ctm().extract()
         , box = element.bbox()
-      
+
       // width and height including transformations
       this.width  = box.width  * t.scaleX
       this.height = box.height * t.scaleY
@@ -70,42 +67,35 @@ SVG.TBox = SVG.invent({
     // add center, right and bottom
     fullBox(this)
   }
+}
 
-  // Define Parent
-, parent: SVG.Element
-
-  // Constructor
-, construct: {
-    // Get transformed bounding box
+extend(Element, {
+    // Get bounding box
     tbox: function() {
-      return new SVG.TBox(this)
+      return new TBox(this)
     }
-  }
-
 })
 
-
-SVG.RBox = SVG.invent({
-  // Initialize
-  create: function(element) {
+export class RBox{
+  constructor(element){
     if (element) {
       var e    = element.doc().parent()
         , box  = element.node.getBoundingClientRect()
         , zoom = 1
-      
+
       // get screen offset
       this.x = box.left
       this.y = box.top
-      
+
       // subtract parent offset
       this.x -= e.offsetLeft
       this.y -= e.offsetTop
-      
+
       while (e = e.offsetParent) {
         this.x -= e.offsetLeft
         this.y -= e.offsetTop
       }
-      
+
       // calculate cumulative zoom from svg documents
       e = element
       while (e.parent && (e = e.parent())) {
@@ -117,10 +107,10 @@ SVG.RBox = SVG.invent({
       }
 
       // recalculate viewbox distortion
-      this.width  = box.width  /= zoom
-      this.height = box.height /= zoom
+      this.width  = box.width  / zoom
+      this.height = box.height / zoom
     }
-    
+
     // add center, right and bottom
     fullBox(this)
 
@@ -128,24 +118,18 @@ SVG.RBox = SVG.invent({
     this.x += window.pageXOffset
     this.y += window.pageYOffset
   }
+}
 
-  // define Parent
-, parent: SVG.Element
-
-  // Constructor
-, construct: {
-    // Get rect box
+extend(Element, {
+    // Get bounding box
     rbox: function() {
-      return new SVG.RBox(this)
+      return new RBox(this)
     }
-  }
-
 })
 
 // Add universal merge method
-;[SVG.BBox, SVG.TBox, SVG.RBox].forEach(function(c) {
-
-  SVG.extend(c, {
+;[BBox, TBox, RBox].forEach(function(c) {
+  extend(c, {
     // Merge rect box with another, return a new instance
     merge: function(box) {
       var b = new c()
@@ -155,7 +139,7 @@ SVG.RBox = SVG.invent({
       b.y      = Math.min(this.y, box.y)
       b.width  = Math.max(this.x + this.width,  box.x + box.width)  - b.x
       b.height = Math.max(this.y + this.height, box.y + box.height) - b.y
-      
+
       return fullBox(b)
     }
 

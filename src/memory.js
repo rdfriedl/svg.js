@@ -1,16 +1,18 @@
-SVG.extend(SVG.Element, {
+import Element from 'element.js';
+import {extend} from 'svg.js';
+extend(Element, {
   // Remember arbitrary data
   remember: function(k, v) {
-    // remember every item in an object individually 
+    // remember every item in an object individually
     if (typeof arguments[0] == 'object')
       for (var v in k)
         this.remember(v, k[v])
 
-    // retrieve memory 
+    // retrieve memory
     else if (arguments.length == 1)
       return this.memory()[k]
 
-    // store memory 
+    // store memory
     else
       this.memory()[k] = v
 

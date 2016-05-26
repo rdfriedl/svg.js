@@ -1,19 +1,15 @@
-SVG.Nested = SVG.invent({
-  // Initialize node
-  create: function() {
-    this.constructor.call(this, SVG.create('svg'))
-    
+import Container from 'container.js';
+import {create, extend} from 'svg.js';
+
+export default class Nested extends Container{
+  constructor(){
+    super(create('svg'))
     this.style('overflow', 'visible')
   }
-
-  // Inherit from
-, inherit: SVG.Container
-  
-  // Add parent method
-, construct: {
-    // Create nested svg document
-    nested: function() {
-      return this.put(new SVG.Nested)
-    }
+}
+extend(Container,{
+  // Create nested svg document
+  nested(){
+    return this.put(new Nested)
   }
 })

@@ -1,3 +1,16 @@
+import Element from 'element.js';
+import FX from 'fx.js';
+import Parent from 'parent.js';
+import Rect from 'rect.js';
+import {Circle, Ellipse} from 'ellipse.js';
+import Text from 'text.js';
+import Path from 'path.js';
+import Gradient from 'gradient.js';
+import Color from 'color.js';
+import Matrix from 'matrix.js';
+import svg_Number from 'number.js';
+import {extend} from 'svg.js';
+
 // Define list of available attributes for stroke and fill
 var sugar = {
   stroke: ['color', 'width', 'opacity', 'linecap', 'linejoin', 'miterlimit', 'dasharray', 'dashoffset']
@@ -7,16 +20,16 @@ var sugar = {
   }
 }
 
-// Add sugar for fill and stroke 
+// Add sugar for fill and stroke
 ;['fill', 'stroke'].forEach(function(m) {
   var i, extension = {}
 
   extension[m] = function(o) {
-    if (typeof o == 'string' || SVG.Color.isRgb(o) || (o && typeof o.fill === 'function'))
+    if (typeof o == 'string' || Color.isRgb(o) || (o && typeof o.fill === 'function'))
       this.attr(m, o)
 
     else
-      // set all attributes from sugar.fill and sugar.stroke list 
+      // set all attributes from sugar.fill and sugar.stroke list
       for (i = sugar[m].length - 1; i >= 0; i--)
         if (o[sugar[m][i]] != null)
           this.attr(sugar.prefix(m, sugar[m][i]), o[sugar[m][i]])
@@ -24,11 +37,11 @@ var sugar = {
     return this
   }
 
-  SVG.extend(SVG.Element, SVG.FX, extension)
+  extend(Element, FX, extension)
 
 })
 
-SVG.extend(SVG.Element, SVG.FX, {
+extend(Element, FX, {
   // Map rotation to transform
   rotate: function(d, cx, cy) {
     return this.transform({ rotation: d, cx: cx, cy: cy })
@@ -53,7 +66,7 @@ SVG.extend(SVG.Element, SVG.FX, {
   }
   // Map matrix to transform
 , matrix: function(m) {
-    return this.attr('transform', new SVG.Matrix(m))
+    return this.attr('transform', new Matrix(m))
   }
   // Opacity
 , opacity: function(value) {
@@ -61,11 +74,11 @@ SVG.extend(SVG.Element, SVG.FX, {
   }
   // Relative move over x axis
 , dx: function(x) {
-    return this.x((this instanceof SVG.FX ? 0 : this.x()) + x, true)
+    return this.x((this instanceof FX ? 0 : this.x()) + x, true)
   }
   // Relative move over y axis
 , dy: function(y) {
-    return this.y((this instanceof SVG.FX ? 0 : this.y()) + y, true)
+    return this.y((this instanceof FX ? 0 : this.y()) + y, true)
   }
   // Relative move over x and y axes
 , dmove: function(x, y) {
@@ -73,17 +86,17 @@ SVG.extend(SVG.Element, SVG.FX, {
   }
 })
 
-SVG.extend(SVG.Rect, SVG.Ellipse, SVG.Circle, SVG.Gradient, SVG.FX, {
+extend(Rect, Ellipse, Circle, Gradient, FX, {
   // Add x and y radius
   radius: function(x, y) {
     var type = (this.target || this).type;
     return type == 'radial' || type == 'circle' ?
-      this.attr({ 'r': new SVG.Number(x) }) :
+      this.attr({ 'r': new svg_Number(x) }) :
       this.rx(x).ry(y == null ? x : y)
   }
 })
 
-SVG.extend(SVG.Path, {
+extend(Path, {
   // Get path length
   length: function() {
     return this.node.getTotalLength()
@@ -94,7 +107,7 @@ SVG.extend(SVG.Path, {
   }
 })
 
-SVG.extend(SVG.Parent, SVG.Text, SVG.FX, {
+extend(Parent, Text, FX, {
   // Set font
   font: function(o) {
     for (var k in o)

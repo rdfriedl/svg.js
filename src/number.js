@@ -1,7 +1,7 @@
-// Module for unit convertions
-SVG.Number = SVG.invent({
-  // Initialize
-  create: function(value, unit) {
+import regex from 'regex.js';
+
+export default class Number{
+  constructor(value, unit){
     // initialize defaults
     this.value = 0
     this.unit  = unit || ''
@@ -12,7 +12,7 @@ SVG.Number = SVG.invent({
       this.value = isNaN(value) ? 0 : !isFinite(value) ? (value < 0 ? -3.4e+38 : +3.4e+38) : value
 
     } else if (typeof value === 'string') {
-      unit = value.match(SVG.regex.numberAndUnit)
+      unit = value.match(regex.numberAndUnit)
 
       if (unit) {
         // make value numeric
@@ -29,74 +29,70 @@ SVG.Number = SVG.invent({
       }
 
     } else {
-      if (value instanceof SVG.Number) {
+      if (value instanceof Number) {
         this.value = value.valueOf()
         this.unit  = value.unit
       }
     }
-
   }
-  // Add methods
-, extend: {
-    // Stringalize
-    toString: function() {
-      return (
-        this.unit == '%' ?
-          ~~(this.value * 1e8) / 1e6:
-        this.unit == 's' ?
-          this.value / 1e3 :
-          this.value
-      ) + this.unit
-    }
-  , toJSON: function() {
-      return this.toString()
-    }
-  , // Convert to primitive
-    valueOf: function() {
-      return this.value
-    }
-    // Add number
-  , plus: function(number) {
-      return new SVG.Number(this + new SVG.Number(number), this.unit)
-    }
-    // Subtract number
-  , minus: function(number) {
-      return this.plus(-new SVG.Number(number))
-    }
-    // Multiply number
-  , times: function(number) {
-      return new SVG.Number(this * new SVG.Number(number), this.unit)
-    }
-    // Divide number
-  , divide: function(number) {
-      return new SVG.Number(this / new SVG.Number(number), this.unit)
-    }
-    // Convert to different unit
-  , to: function(unit) {
-      var number = new SVG.Number(this)
 
-      if (typeof unit === 'string')
-        number.unit = unit
-
-      return number
-    }
-    // Make number morphable
-  , morph: function(number) {
-      this.destination = new SVG.Number(number)
-
-      return this
-    }
-    // Get morphed number at given position
-  , at: function(pos) {
-      // Make sure a destination is defined
-      if (!this.destination) return this
-
-      // Generate new morphed number
-      return new SVG.Number(this.destination)
-          .minus(this)
-          .times(pos)
-          .plus(this)
-    }
-
+  // Stringalize
+  toString() {
+    return (
+      this.unit == '%' ?
+        ~~(this.value * 1e8) / 1e6:
+      this.unit == 's' ?
+        this.value / 1e3 :
+        this.value
+    ) + this.unit
   }
-})
+  toJSON() {
+    return this.toString()
+  }
+  // Convert to primitive
+  valueOf() {
+    return this.value
+  }
+  // Add number
+  plus(number) {
+    return new Number(this + new Number(number), this.unit)
+  }
+  // Subtract number
+  minus(number) {
+    return this.plus(-new Number(number))
+  }
+  // Multiply number
+  times(number) {
+    return new Number(this * new Number(number), this.unit)
+  }
+  // Divide number
+  divide(number) {
+    return new Number(this / new Number(number), this.unit)
+  }
+  // Convert to different unit
+  to(unit) {
+    var number = new Number(this)
+
+    if (typeof unit === 'string')
+      number.unit = unit
+
+    return number
+  }
+  // Make number morphable
+  morph(number) {
+    this.destination = new Number(number)
+
+    return this
+  }
+  // Get morphed number at given position
+  at(pos) {
+    // Make sure a destination is defined
+    if (!this.destination) return this
+
+    // Generate new morphed number
+    return new Number(this.destination)
+        .minus(this)
+        .times(pos)
+        .plus(this)
+  }
+}

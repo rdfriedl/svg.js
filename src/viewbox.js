@@ -1,7 +1,12 @@
+import Element from 'element.js';
+import Container from 'container.js';
+import Doc from 'doc.js';
+import svg_Number from 'number.js';
+import FX from 'fx.js';
+import {extend} from 'svg.js';
 
-SVG.ViewBox = SVG.invent({
-
-  create: function(source) {
+export default class ViewBox{
+  constructor(source) {
     var i, base = [1, 0, 0, 1]
 
     var x, y, width, height, box, view, we, he
@@ -9,7 +14,7 @@ SVG.ViewBox = SVG.invent({
       , hm   = 1 // height multiplier
       , reg  = /-?[\d\.]+/g
 
-    if(source instanceof SVG.Element){
+    if(source instanceof Element){
 
       we = source
       he = source
@@ -17,18 +22,18 @@ SVG.ViewBox = SVG.invent({
       box = source.bbox
 
       // get dimensions of current node
-      width  = new SVG.Number(source.width())
-      height = new SVG.Number(source.height())
+      width  = new svg_Number(source.width())
+      height = new svg_Number(source.height())
 
       // find nearest non-percentual dimensions
       while (width.unit == '%') {
         wm *= width.value
-        width = new SVG.Number(we instanceof SVG.Doc ? we.parent().offsetWidth : we.parent().width())
+        width = new svg_Number(we instanceof Doc ? we.parent().offsetWidth : we.parent().width())
         we = we.parent()
       }
       while (height.unit == '%') {
         hm *= height.value
-        height = new SVG.Number(he instanceof SVG.Doc ? he.parent().offsetHeight : he.parent().height())
+        height = new svg_Number(he instanceof Doc ? he.parent().offsetHeight : he.parent().height())
         he = he.parent()
       }
 
@@ -59,7 +64,8 @@ SVG.ViewBox = SVG.invent({
 
       }
 
-    }else{
+    }
+    else{
       // ensure source as object
       source = typeof source === 'string' ?
         source.match(reg).map(function(el){ return parseFloat(el) }) :
@@ -76,40 +82,56 @@ SVG.ViewBox = SVG.invent({
       this.width = source[2]
       this.height = source[3]
     }
-
-
   }
 
-, extend: {
-
-    toString: function() {
-      return this.x + ' ' + this.y + ' ' + this.width + ' ' + this.height
-    }
-  , morph: function(v){
-
+  toString() {
+    return this.x + ' ' + this.y + ' ' + this.width + ' ' + this.height
+  }
+  morph(v){
       var v = arguments.length == 1 ?
         [v.x, v.y, v.width, v.height] :
         [].slice.call(arguments)
 
-      this.destination = new SVG.ViewBox(v)
-      
-      return this
+      this.destination = new ViewBox(v)
 
+      return this
     }
 
-  , at: function(pos) {
-
+  at(pos) {
     if(!this.destination) return this
 
-    return new SVG.ViewBox([
+    return new ViewBox([
         this.x + (this.destination.x - this.x) * pos
       , this.y + (this.destination.y - this.y) * pos
       , this.width + (this.destination.width - this.width) * pos
       , this.height + (this.destination.height - this.height) * pos
     ])
+  }
+}
 
+extend(Container, {
+  // Get the viewBox and calculate the zoom value
+  viewbox(v) {
+    if (arguments.length == 0)
+      // act as a getter if there are no arguments
+      return new ViewBox(this)
+
+    // otherwise act as a setter
+    v = arguments.length == 1 ?
+      [v.x, v.y, v.width, v.height] :
+      [].slice.call(arguments)
+
+    return this.attr('viewBox', v)
+  }
+})
+
+extend(FX, {
+  // Add animatable viewbox
+  viewbox: function(x, y, width, height) {
+    if (this.target() instanceof Container) {
+      this.add('viewbox', new ViewBox(x, y, width, height))
     }
 
+    return this
   }
-
 })

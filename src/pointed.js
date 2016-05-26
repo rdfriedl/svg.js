@@ -1,7 +1,12 @@
+import PointArray from 'pointarray.js';
+import {Polyline, Polygon} from 'poly.js';
+import Line from 'line.js';
+import {extend} from 'svg.js';
+
 // unify all point to point elements
-SVG.extend(SVG.Line, SVG.Polyline, SVG.Polygon, {
+extend(Line, Polyline, Polygon, {
   // Define morphable array
-  morphArray:  SVG.PointArray
+  morphArray: PointArray
   // Move by left top corner over x-axis
 , x: function(x) {
     return x == null ? this.bbox().x : this.move(x, this.bbox().y)
@@ -20,6 +25,6 @@ SVG.extend(SVG.Line, SVG.Polyline, SVG.Polygon, {
 , height: function(height) {
     var b = this.bbox()
 
-    return height == null ? b.height : this.size(b.width, height) 
+    return height == null ? b.height : this.size(b.width, height)
   }
 })

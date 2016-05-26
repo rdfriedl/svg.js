@@ -1,51 +1,31 @@
-// The main wrapping element
-var SVG = this.SVG = function(element) {
-  if (SVG.supported) {
-    element = new SVG.Doc(element)
-
-    if (!SVG.parser)
-      SVG.prepare(element)
-
-    return element
-  }
-}
+import {capitalize} from 'helpers.js';
+import {eid} from 'ids.js';
 
 // Default namespaces
-SVG.ns    = 'http://www.w3.org/2000/svg'
-SVG.xmlns = 'http://www.w3.org/2000/xmlns/'
-SVG.xlink = 'http://www.w3.org/1999/xlink'
-SVG.svgjs = 'http://svgjs.com/svgjs'
+export const ns    = 'http://www.w3.org/2000/svg'
+export const xmlns = 'http://www.w3.org/2000/xmlns/'
+export const xlink = 'http://www.w3.org/1999/xlink'
+export const svgjs = 'http://svgjs.com/svgjs'
 
 // Svg support test
-SVG.supported = (function() {
+export const supported = (function() {
   return !! document.createElementNS &&
-         !! document.createElementNS(SVG.ns,'svg').createSVGRect
+         !! document.createElementNS(ns,'svg').createSVGRect
 })()
 
-// Don't bother to continue if SVG is not supported
-if (!SVG.supported) return false
-
-// Element id sequence
-SVG.did  = 1000
-
-// Get next named element id
-SVG.eid = function(name) {
-  return 'Svgjs' + capitalize(name) + (SVG.did++)
-}
-
 // Method for element creation
-SVG.create = function(name) {
+export function create(name) {
   // create element
-  var element = document.createElementNS(this.ns, name)
+  var element = document.createElementNS(ns, name)
 
   // apply unique id
-  element.setAttribute('id', this.eid(name))
+  element.setAttribute('id', eid(name))
 
   return element
 }
 
 // Method for extending objects
-SVG.extend = function() {
+export function extend() {
   var modules, methods, key, i
 
   // Get list of modules
@@ -60,17 +40,17 @@ SVG.extend = function() {
         modules[i].prototype[key] = methods[key]
 
   // Make sure SVG.Set inherits any newly added methods
-  if (SVG.Set && SVG.Set.inherit)
-    SVG.Set.inherit()
+  // if (SVG.Set && SVG.Set.inherit)
+  //   SVG.Set.inherit()
 }
 
 // Invent new element
-SVG.invent = function(config) {
+export function invent(config) {
   // Create element initializer
   var initializer = typeof config.create == 'function' ?
     config.create :
     function() {
-      this.constructor.call(this, SVG.create(config.create))
+      this.constructor.call(this, create(config.create))
     }
 
   // Inherit prototype
@@ -79,17 +59,17 @@ SVG.invent = function(config) {
 
   // Extend with methods
   if (config.extend)
-    SVG.extend(initializer, config.extend)
+    extend(initializer, config.extend)
 
   // Attach construct method to parent
   if (config.construct)
-    SVG.extend(config.parent || SVG.Container, config.construct)
+    extend(config.parent || SVG.Container, config.construct)
 
   return initializer
 }
 
 // Adopt existing svg elements
-SVG.adopt = function(node) {
+export function adopt(node) {
   // check for presence of node
   if (!node) return null
 
@@ -127,7 +107,7 @@ SVG.adopt = function(node) {
 }
 
 // Initialize parsing element
-SVG.prepare = function(element) {
+export function prepare(element) {
   // Select document body and create invisible svg element
   var body = document.getElementsByTagName('body')[0]
     , draw = (body ? new SVG.Doc(body) : element.nested()).size(2, 0)

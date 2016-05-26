@@ -1,8 +1,10 @@
-SVG.Point = SVG.invent({
-  // Initialize
-  create: function(x,y) {
+import Element from 'element.js';
+import {extend} from 'svg.js';
+
+export default class Point{
+  constructor(x,y){
     var i, source, base = {x:0, y:0}
-    
+
     // ensure source as object
     source = Array.isArray(x) ?
       {x:x[0], y:x[1]} :
@@ -16,57 +18,50 @@ SVG.Point = SVG.invent({
     this.y = source.y
   }
 
-  // Add methods
-, extend: {
-    // Clone point
-    clone: function() {
-      return new SVG.Point(this)
-    }
-    // Morph one point into another
-  , morph: function(point) {
-      // store new destination
-      this.destination = new SVG.Point(point)
-
-      return this
-    }
-    // Get morphed point at a given position
-  , at: function(pos) {
-      // make sure a destination is defined
-      if (!this.destination) return this
-
-      // calculate morphed matrix at a given position
-      var point = new SVG.Point({
-        x: this.x + (this.destination.x - this.x) * pos
-      , y: this.y + (this.destination.y - this.y) * pos
-      })
-
-      return point
-    }
-    // Convert to native SVGPoint
-  , native: function() {
-      // create new point
-      var point = SVG.parser.draw.node.createSVGPoint()
-
-      // update with current values
-      point.x = this.x
-      point.y = this.y
-
-      return point
-    }
-    // transform point with matrix
-  , transform: function(matrix) {
-      return new SVG.Point(this.native().matrixTransform(matrix.native()))
-    }
-
+  // Clone point
+  clone() {
+    return new Point(this)
   }
+  // Morph one point into another
+  morph(point) {
+    // store new destination
+    this.destination = new Point(point)
 
-})
+    return this
+  }
+  // Get morphed point at a given position
+  at(pos) {
+    // make sure a destination is defined
+    if (!this.destination) return this
 
-SVG.extend(SVG.Element, {
+    // calculate morphed matrix at a given position
+    var point = new Point({
+      x: this.x + (this.destination.x - this.x) * pos
+    , y: this.y + (this.destination.y - this.y) * pos
+    })
 
+    return point
+  }
+  // Convert to native SVGPoint
+  native() {
+    // create new point
+    var point = SVG.parser.draw.node.createSVGPoint()
+
+    // update with current values
+    point.x = this.x
+    point.y = this.y
+
+    return point
+  }
+  // transform point with matrix
+  transform(matrix) {
+    return new Point(this.native().matrixTransform(matrix.native()))
+  }
+}
+
+extend(Element, {
   // Get point
   point: function(x, y) {
-    return new SVG.Point(x,y).transform(this.screenCTM().inverse());
+    return new Point(x,y).transform(this.screenCTM().inverse());
   }
-
 })

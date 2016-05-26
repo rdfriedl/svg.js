@@ -1,18 +1,20 @@
+import svg_Array from 'array.js';
+import regex from 'regex.js';
+import {extend} from 'svg.js';
+import {arrayToString} from 'helpers.js';
+
 // Path points array
-SVG.PathArray = function(array, fallback) {
-  this.constructor.call(this, array, fallback || [['M', 0, 0]])
-}
+export default class PathArray extends svg_Array{
+  constructor(array, fallback){
+    super(array, fallback || [['M', 0, 0]])
+  }
 
-// Inherit from SVG.Array
-SVG.PathArray.prototype = new SVG.Array
-
-SVG.extend(SVG.PathArray, {
   // Convert array to string
-  toString: function() {
+  toString() {
     return arrayToString(this.value)
   }
   // Move path string
-, move: function(x, y) {
+  move(x, y) {
     // get bounding box of current situation
     var box = this.bbox()
 
@@ -57,7 +59,7 @@ SVG.extend(SVG.PathArray, {
     return this
   }
   // Resize path string
-, size: function(width, height) {
+  size(width, height) {
     // get bounding box of current situation
     var i, l, box = this.bbox()
 
@@ -101,9 +103,9 @@ SVG.extend(SVG.PathArray, {
     return this
   }
   // Absolutize and parse path to array
-, parse: function(array) {
+  parse(array) {
     // if it's already a patharray, no need to parse it
-    if (array instanceof SVG.PathArray) return array.valueOf()
+    if (array instanceof PathArray) return array.valueOf()
 
     // prepare for parsing
     var i, x0, y0, s, seg, arr
@@ -114,13 +116,13 @@ SVG.extend(SVG.PathArray, {
     if(typeof array == 'string'){
 
       array = array
-        .replace(SVG.regex.negExp, 'X')         // replace all negative exponents with certain char
-        .replace(SVG.regex.pathLetters, ' $& ') // put some room between letters and numbers
-        .replace(SVG.regex.hyphen, ' -')        // add space before hyphen
-        .replace(SVG.regex.comma, ' ')          // unify all spaces
-        .replace(SVG.regex.X, 'e-')             // add back the expoent
+        .replace(regex.negExp, 'X')         // replace all negative exponents with certain char
+        .replace(regex.pathLetters, ' $& ') // put some room between letters and numbers
+        .replace(regex.hyphen, ' -')        // add space before hyphen
+        .replace(regex.comma, ' ')          // unify all spaces
+        .replace(regex.X, 'e-')             // add back the expoent
         .trim()                                 // trim
-        .split(SVG.regex.whitespaces)           // split into array
+        .split(regex.whitespaces)           // split into array
 
       // at this place there could be parts like ['3.124.854.32'] because we could not determine the point as seperator till now
       // we fix this elements in the next loop
@@ -131,7 +133,7 @@ SVG.extend(SVG.PathArray, {
           array.splice.apply(array, [i, 1].concat(first, split.map(function(el){ return '.'+el }))) // add first and all other entries back to array
         }
       }
-        
+
     }else{
       array = array.reduce(function(prev, curr){
         return [].concat.apply(prev, curr)
@@ -145,7 +147,7 @@ SVG.extend(SVG.PathArray, {
     do{
 
       // Test if we have a path letter
-      if(SVG.regex.isPathLetter.test(array[0])){
+      if(regex.isPathLetter.test(array[0])){
         s = array[0]
         array.shift()
       // If last letter was a move command and we got no new, it defaults to [L]ine
@@ -234,10 +236,9 @@ SVG.extend(SVG.PathArray, {
 
   }
   // Get bounding box of path
-, bbox: function() {
+  bbox() {
     SVG.parser.path.setAttribute('d', this.toString())
 
     return SVG.parser.path.getBBox()
   }
-
-})
+}

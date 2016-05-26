@@ -1,39 +1,36 @@
-SVG.A = SVG.invent({
-  // Initialize node
-  create: 'a'
-
-  // Inherit from
-, inherit: SVG.Container
-
-  // Add class methods
-, extend: {
-    // Link url
-    to: function(url) {
-      return this.attr('href', url, SVG.xlink)
-    }
-    // Link show attribute
-  , show: function(target) {
-      return this.attr('show', target, SVG.xlink)
-    }
-    // Link target attribute
-  , target: function(target) {
-      return this.attr('target', target)
-    }
+import Container from 'container.js';
+import Element from 'element.js';
+import {create, extend, xlink} from 'svg.js';
+export default class A extends Container{
+  constructor(){
+    super(create('a'));
   }
-  
-  // Add parent method
-, construct: {
-    // Create a hyperlink element
-    link: function(url) {
-      return this.put(new SVG.A).to(url)
-    }
+
+  // Link url
+  to(url) {
+    return this.attr('href', url, xlink)
+  }
+  // Link show attribute
+  show(target) {
+    return this.attr('show', target, xlink)
+  }
+  // Link target attribute
+  target(target) {
+    return this.attr('target', target)
+  }
+}
+
+extend(Container, {
+  // Create a hyperlink element
+  link: function(url) {
+    return this.put(new A).to(url)
   }
 })
 
-SVG.extend(SVG.Element, {
+extend(Element, {
   // Create a hyperlink element
   linkTo: function(url) {
-    var link = new SVG.A
+    var link = new A
 
     if (typeof url == 'function')
       url.call(link, link)
@@ -42,5 +39,5 @@ SVG.extend(SVG.Element, {
 
     return this.parent().put(link).put(this)
   }
-  
+
 })

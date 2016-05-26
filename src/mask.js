@@ -1,52 +1,47 @@
-SVG.Mask = SVG.invent({
-  // Initialize node
-  create: function() {
-    this.constructor.call(this, SVG.create('mask'))
+import Element from 'element.js';
+import Container from 'container.js';
+import {create, extend} from 'svg.js';
 
-    // keep references to masked elements 
+export default class Mask extends Container{
+  constructor(){
+    super(create('mask'))
+
+    // keep references to masked elements
     this.targets = []
   }
 
-  // Inherit from
-, inherit: SVG.Container
+  // Unmask all masked elements and remove itself
+  remove() {
+    // unmask all targets
+    for (var i = this.targets.length - 1; i >= 0; i--)
+      if (this.targets[i])
+        this.targets[i].unmask()
+    this.targets = []
 
-  // Add class methods
-, extend: {
-    // Unmask all masked elements and remove itself
-    remove: function() {
-      // unmask all targets 
-      for (var i = this.targets.length - 1; i >= 0; i--)
-        if (this.targets[i])
-          this.targets[i].unmask()
-      this.targets = []
+    // remove mask from parent
+    this.parent().removeElement(this)
 
-      // remove mask from parent 
-      this.parent().removeElement(this)
-      
-      return this
-    }
+    return this
   }
-  
-  // Add parent method
-, construct: {
-    // Create masking element
-    mask: function() {
-      return this.defs().put(new SVG.Mask)
-    }
+}
+
+extend(Container, {
+  // Create masking element
+  mask: function() {
+    return this.defs().put(new Mask)
   }
 })
 
-
-SVG.extend(SVG.Element, {
+extend(Element, {
   // Distribute mask to svg element
   maskWith: function(element) {
-    // use given mask or create a new one 
-    this.masker = element instanceof SVG.Mask ? element : this.parent().mask().add(element)
+    // use given mask or create a new one
+    this.masker = element instanceof Mask ? element : this.parent().mask().add(element)
 
-    // store reverence on self in mask 
+    // store reverence on self in mask
     this.masker.targets.push(this)
-    
-    // apply mask 
+
+    // apply mask
     return this.attr('mask', 'url("#' + this.masker.attr('id') + '")')
   }
   // Unmask element
@@ -54,5 +49,5 @@ SVG.extend(SVG.Element, {
     delete this.masker
     return this.attr('mask', null)
   }
-  
+
 })

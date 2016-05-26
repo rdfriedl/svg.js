@@ -1,53 +1,51 @@
-SVG.TextPath = SVG.invent({
-  // Initialize node
-  create: 'textPath'
+import Container from 'container.js';
+import Parent from 'parent.js';
+import Text from 'text.js';
+import {extend, create, adopt, xlink} from 'svg.js';
 
-  // Inherit from
-, inherit: SVG.Parent
+export default class TextPath extends Parent{
+  constructor(){
+    super(create('textPath'))
+  }
+}
+extend(Text, {
+  // Create path for text to run on
+  path: function(d) {
+    // create textPath element
+    var path  = new TextPath
+      , track = this.doc().defs().path(d)
 
-  // Define parent class
-, parent: SVG.Text
+    // move lines to textpath
+    while (this.node.hasChildNodes())
+      path.node.appendChild(this.node.firstChild)
 
-  // Add parent method
-, construct: {
-    // Create path for text to run on
-    path: function(d) {
-      // create textPath element
-      var path  = new SVG.TextPath
-        , track = this.doc().defs().path(d)
+    // add textPath element as child node
+    this.node.appendChild(path.node)
 
-      // move lines to textpath
-      while (this.node.hasChildNodes())
-        path.node.appendChild(this.node.firstChild)
+    // link textPath to path and add content
+    path.attr('href', '#' + track, xlink)
 
-      // add textPath element as child node
-      this.node.appendChild(path.node)
+    return this
+  },
+  // Plot path if any
+  plot: function(d) {
+    var track = this.track()
 
-      // link textPath to path and add content
-      path.attr('href', '#' + track, SVG.xlink)
+    if (track)
+      track.plot(d)
 
-      return this
-    }
-    // Plot path if any
-  , plot: function(d) {
-      var track = this.track()
+    return this
+  },
+  // Get the path track element
+  track: function() {
+    var path = this.textPath()
 
-      if (track)
-        track.plot(d)
-
-      return this
-    }
-    // Get the path track element
-  , track: function() {
-      var path = this.textPath()
-
-      if (path)
-        return path.reference('href')
-    }
-    // Get the textPath child
-  , textPath: function() {
-      if (this.node.firstChild && this.node.firstChild.nodeName == 'textPath')
-        return SVG.adopt(this.node.firstChild)
-    }
+    if (path)
+      return path.reference('href')
+  },
+  // Get the textPath child
+  textPath: function() {
+    if (this.node.firstChild && this.node.firstChild.nodeName == 'textPath')
+      return adopt(this.node.firstChild)
   }
 })

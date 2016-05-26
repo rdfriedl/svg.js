@@ -1,22 +1,35 @@
+import svg_Set from 'set.js';
+import {extend, adopt} from 'svg.js';
+import Parent from 'parent.js';
+import Element from 'element';
+import utils from 'utilities.js';
+import {idFromReference} from 'helpers.js';
+
 // Method for getting an element by id
-SVG.get = function(id) {
+export function get(id) {
   var node = document.getElementById(idFromReference(id) || id)
-  return SVG.adopt(node)
+  return adopt(node)
 }
 
 // Select elements by query string
-SVG.select = function(query, parent) {
-  return new SVG.Set(
-    SVG.utils.map((parent || document).querySelectorAll(query), function(node) {
-      return SVG.adopt(node)
+export function select(query, parent) {
+  return new svg_Set(
+    utils.map((parent || document).querySelectorAll(query), function(node) {
+      return adopt(node)
     })
   )
 }
 
-SVG.extend(SVG.Parent, {
+extend(Parent, {
   // Scoped select method
   select: function(query) {
-    return SVG.select(query, this.node)
+    return select(query, this.node)
   }
+})
 
+extend(Element, {
+  // Get referenced element form attribute value
+  reference(attr) {
+    return SVG.get(this.attr(attr))
+  }
 })

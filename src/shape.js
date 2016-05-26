@@ -1,10 +1,3 @@
-SVG.Shape = SVG.invent({
-  // Initialize node
-  create: function(element) {
-    this.constructor.call(this, element)
-  }
+import Element from 'element.js';
 
-  // Inherit from
-, inherit: SVG.Element
-
-})
+export default class Shape extends Element{}

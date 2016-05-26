@@ -1,5 +1,6 @@
-
-SVG.extend(SVG.Element, {
+import Element from 'element.js';
+import {extend} from 'svg.js';
+extend(Element, {
   // Store data values on svg nodes
   data: function(a, v, r) {
     if (typeof a == 'object') {
@@ -12,7 +13,7 @@ SVG.extend(SVG.Element, {
       } catch(e) {
         return this.attr('data-' + a)
       }
-      
+
     } else {
       this.attr(
         'data-' + a
@@ -23,7 +24,7 @@ SVG.extend(SVG.Element, {
           JSON.stringify(v)
       )
     }
-    
+
     return this
   }
 })

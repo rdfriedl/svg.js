@@ -1,7 +1,8 @@
-// ### This module adds backward / forward functionality to elements.
+import Doc from 'doc.js';
+import Element from 'element.js';
+import {extend} from 'svg.js';
 
-//
-SVG.extend(SVG.Element, {
+extend(Element, {
   // Get all siblings, including myself
   siblings: function() {
     return this.parent().children()
@@ -27,7 +28,7 @@ SVG.extend(SVG.Element, {
     p.removeElement(this).add(this, i)
 
     // make sure defs node is always at the top
-    if (p instanceof SVG.Doc)
+    if (p instanceof Doc)
       p.node.appendChild(p.defs().node)
 
     return this
@@ -35,7 +36,7 @@ SVG.extend(SVG.Element, {
   // Send given element one step backward
 , backward: function() {
     var i = this.position()
-    
+
     if (i > 0)
       this.parent().removeElement(this).add(this, i - 1)
 
@@ -49,7 +50,7 @@ SVG.extend(SVG.Element, {
     p.node.appendChild(this.node)
 
     // Make sure defs node is always at the top
-    if (p instanceof SVG.Doc)
+    if (p instanceof Doc)
       p.node.appendChild(p.defs().node)
 
     return this
@@ -58,7 +59,7 @@ SVG.extend(SVG.Element, {
 , back: function() {
     if (this.position() > 0)
       this.parent().removeElement(this).add(this, 0)
-    
+
     return this
   }
   // Inserts a given element before the targeted element
@@ -66,7 +67,7 @@ SVG.extend(SVG.Element, {
     element.remove()
 
     var i = this.position()
-    
+
     this.parent().add(element, i)
 
     return this
@@ -74,9 +75,9 @@ SVG.extend(SVG.Element, {
   // Insters a given element after the targeted element
 , after: function(element) {
     element.remove()
-    
+
     var i = this.position()
-    
+
     this.parent().add(element, i + 1)
 
     return this

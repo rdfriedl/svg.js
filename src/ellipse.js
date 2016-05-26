@@ -1,20 +1,24 @@
-SVG.Circle = SVG.invent({
-  // Initialize node
-  create: 'circle'
+import Shape from 'shape.js';
+import FX from 'fx.js';
+import Container from 'container.js';
+import Number from 'number.js';
+import Rect from 'rect.js';
+import {extend, create} from 'svg.js';
+import {proportionalSize} from 'helpers.js';
 
-  // Inherit from
-, inherit: SVG.Shape
-
-  // Add parent method
-, construct: {
-    // Create circle element, based on ellipse
-    circle: function(size) {
-      return this.put(new SVG.Circle).rx(new SVG.Number(size).divide(2)).move(0, 0)
-    }
+export class Circle extends Shape{
+  constructor(){
+    super(create('circle'))
+  }
+}
+extend(Container, {
+  // Create circle element, based on ellipse
+  circle: function(size) {
+    return this.put(new Circle).rx(new Number(size).divide(2)).move(0, 0)
   }
 })
 
-SVG.extend(SVG.Circle, SVG.FX, {
+extend(Circle, FX, {
   // Radius x value
   rx: function(rx) {
     return this.attr('r', rx)
@@ -25,23 +29,19 @@ SVG.extend(SVG.Circle, SVG.FX, {
   }
 })
 
-SVG.Ellipse = SVG.invent({
-  // Initialize node
-  create: 'ellipse'
-
-  // Inherit from
-, inherit: SVG.Shape
-
-  // Add parent method
-, construct: {
-    // Create an ellipse
-    ellipse: function(width, height) {
-      return this.put(new SVG.Ellipse).size(width, height).move(0, 0)
-    }
+export class Ellipse extends Shape{
+  constructor(){
+    super(create('ellipse'))
+  }
+}
+extend(Container, {
+  // Create an ellipse
+  ellipse: function(width, height) {
+    return this.put(new Ellipse).size(width, height).move(0, 0)
   }
 })
 
-SVG.extend(SVG.Ellipse, SVG.Rect, SVG.FX, {
+extend(Ellipse, Rect, FX, {
   // Radius x value
   rx: function(rx) {
     return this.attr('rx', rx)
@@ -53,7 +53,7 @@ SVG.extend(SVG.Ellipse, SVG.Rect, SVG.FX, {
 })
 
 // Add common method
-SVG.extend(SVG.Circle, SVG.Ellipse, {
+extend(Circle, Ellipse, {
     // Move over x-axis
     x: function(x) {
       return x == null ? this.cx() - this.rx() : this.cx(x + this.rx())
@@ -72,18 +72,18 @@ SVG.extend(SVG.Circle, SVG.Ellipse, {
     }
     // Set width of element
   , width: function(width) {
-      return width == null ? this.rx() * 2 : this.rx(new SVG.Number(width).divide(2))
+      return width == null ? this.rx() * 2 : this.rx(new Number(width).divide(2))
     }
     // Set height of element
   , height: function(height) {
-      return height == null ? this.ry() * 2 : this.ry(new SVG.Number(height).divide(2))
+      return height == null ? this.ry() * 2 : this.ry(new Number(height).divide(2))
     }
     // Custom size function
   , size: function(width, height) {
       var p = proportionalSize(this.bbox(), width, height)
 
       return this
-        .rx(new SVG.Number(p.width).divide(2))
-        .ry(new SVG.Number(p.height).divide(2))
+        .rx(new Number(p.width).divide(2))
+        .ry(new Number(p.height).divide(2))
     }
 })
