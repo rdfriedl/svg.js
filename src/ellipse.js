@@ -80,7 +80,7 @@ extend(Circle, Ellipse, {
     }
     // Custom size function
   , size: function(width, height) {
-      var p = proportionalSize(this.bbox(), width, height)
+      var p = proportionalSize(this, width, height)
 
       return this
         .rx(new Number(p.width).divide(2))

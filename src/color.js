@@ -9,20 +9,22 @@ export default class Color{
     this.g = 0
     this.b = 0
 
+    if(!color) return
+
     // parse color
     if (typeof color === 'string') {
-      if (regex.isRgb.test(color)) {
+      if (SVG.regex.isRgb.test(color)) {
         // get rgb values
-        match = regex.rgb.exec(color.replace(/\s/g,''))
+        match = SVG.regex.rgb.exec(color.replace(/\s/g,''))
 
         // parse numeric values
         this.r = parseInt(match[1])
         this.g = parseInt(match[2])
         this.b = parseInt(match[3])
 
-      } else if (regex.isHex.test(color)) {
+      } else if (SVG.regex.isHex.test(color)) {
         // get hex values
-        match = regex.hex.exec(fullHex(color))
+        match = SVG.regex.hex.exec(fullHex(color))
 
         // parse numeric values
         this.r = parseInt(match[1], 16)

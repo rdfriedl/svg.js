@@ -55,7 +55,7 @@ export default class Element{
   }
   // Set element size to given width and height
   size(width, height) {
-    var p = proportionalSize(this.bbox(), width, height)
+    var p = proportionalSize(this, width, height)
 
     return this
       .width(new svg_Number(p.width))
@@ -66,8 +66,9 @@ export default class Element{
     // clone element and assign new id
     var clone = assignNewId(this.node.cloneNode(true))
 
-    // insert the clone after myself
-    this.after(clone)
+    // insert the clone in the given parent or after myself
+    if(parent) parent.add(clone)
+    else this.after(clone)
 
     return clone
   }
@@ -231,7 +232,6 @@ export default class Element{
   }
   // write svgjs data to the dom
   writeDataToDom() {
-
     // dump variables recursively
     if(this.each || this.lines){
       var fn = this.each ? this : this.lines();

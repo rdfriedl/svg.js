@@ -44,7 +44,7 @@ extend(Polyline, Polygon, {
   }
   // Set element size to given width and height
 , size: function(width, height) {
-    var p = proportionalSize(this.bbox(), width, height)
+    var p = proportionalSize(this, width, height)
 
     return this.attr('points', this.array().size(p.width, p.height))
   }

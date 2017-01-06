@@ -31,7 +31,7 @@ export default class Path extends Shape{
   }
   // Set element size to given width and height
   size(width, height) {
-    var p = proportionalSize(this.bbox(), width, height)
+    var p = proportionalSize(this, width, height)
 
     return this.attr('d', this.array().size(p.width, p.height))
   }
@@ -46,7 +46,7 @@ export default class Path extends Shape{
 }
 extend(Path, {
   // Define morphable array
-  morphArray:  PathArray
+  morphArray: PathArray
 })
 
 extend(Container, {

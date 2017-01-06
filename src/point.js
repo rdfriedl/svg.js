@@ -10,8 +10,8 @@ export default class Point{
       {x:x[0], y:x[1]} :
     typeof x === 'object' ?
       {x:x.x, y:x.y} :
-    y != null ?
-      {x:x, y:y} : base
+    x != null ?
+      {x:x, y:(y != null ? y : x)} : base // If y has no value, then x is used has its value
 
     // merge source
     this.x = source.x
@@ -23,9 +23,9 @@ export default class Point{
     return new Point(this)
   }
   // Morph one point into another
-  morph(point) {
+  morph(x, y) {
     // store new destination
-    this.destination = new Point(point)
+    this.destination = new Point(x, y)
 
     return this
   }

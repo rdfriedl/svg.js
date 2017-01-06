@@ -7,12 +7,12 @@ import {extend} from 'svg.js';
 
 export default class ViewBox{
   constructor(source) {
-    var i, base = [1, 0, 0, 1]
+    var i, base = [0, 0, 0, 0]
 
     var x, y, width, height, box, view, we, he
       , wm   = 1 // width multiplier
       , hm   = 1 // height multiplier
-      , reg  = /-?[\d\.]+/g
+      , reg  = /[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?/gi
 
     if(source instanceof Element){
 
@@ -114,7 +114,7 @@ extend(Container, {
   viewbox(v) {
     if (arguments.length == 0)
       // act as a getter if there are no arguments
-      return new ViewBox(this)
+      return new SVG.ViewBox(this)
 
     // otherwise act as a setter
     v = arguments.length == 1 ?

@@ -25,7 +25,9 @@ var sugar = {
   var i, extension = {}
 
   extension[m] = function(o) {
-    if (typeof o == 'string' || Color.isRgb(o) || (o && typeof o.fill === 'function'))
+    if (typeof o == 'undefined')
+      return this
+    if (typeof o == 'string' || SVG.Color.isRgb(o) || (o && typeof o.fill === 'function'))
       this.attr(m, o)
 
     else
@@ -48,7 +50,9 @@ extend(Element, FX, {
   }
   // Map skew to transform
 , skew: function(x, y, cx, cy) {
-    return this.transform({ skewX: x, skewY: y, cx: cx, cy: cy })
+    return arguments.length == 1  || arguments.length == 3 ?
+      this.transform({ skew: x, cx: y, cy: cx }) : 
+      this.transform({ skewX: x, skewY: y, cx: cx, cy: cy })
   }
   // Map scale to transform
 , scale: function(x, y, cx, cy) {
@@ -89,9 +93,9 @@ extend(Element, FX, {
 extend(Rect, Ellipse, Circle, Gradient, FX, {
   // Add x and y radius
   radius: function(x, y) {
-    var type = (this.target || this).type;
+    var type = (this._target || this).type;
     return type == 'radial' || type == 'circle' ?
-      this.attr({ 'r': new svg_Number(x) }) :
+      this.attr('r', new SVG.Number(x)) :
       this.rx(x).ry(y == null ? x : y)
   }
 })
@@ -122,4 +126,3 @@ extend(Parent, Text, FX, {
     return this
   }
 })
-

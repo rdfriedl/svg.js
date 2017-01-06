@@ -10,11 +10,15 @@ export class BBox{
 
       // yes this is ugly, but Firefox can be a bitch when it comes to elements that are not yet rendered
       try {
+
+        // the element is NOT in the dom, throw error
+        if(!document.documentElement.contains(element.node)) throw new Exception('Element not in the dom')
+
         // find native bbox
         box = element.node.getBBox()
       } catch(e) {
-        if(element instanceof Shape){
-          var clone = element.clone().addTo(SVG.parser.draw)
+        if(element instanceof SVG.Shape){
+          var clone = element.clone(SVG.parser.draw).show()
           box = clone.bbox()
           clone.remove()
         }else{

@@ -5,8 +5,8 @@ describe('Point', function() {
 
     describe('without a source', function() {
 
-      point(function() {
-        matrix = new SVG.Point
+      beforeEach(function() {
+        point = new SVG.Point
       })
 
       it('creates a new point with default values', function() {
@@ -22,6 +22,15 @@ describe('Point', function() {
 
         expect(point.x).toBe(2)
         expect(point.y).toBe(4)
+      })
+    })
+
+    describe('with only x given', function() {
+      it('creates a point using the given value for both x and y', function() {
+        var point = new SVG.Point(7)
+
+        expect(point.x).toBe(7)
+        expect(point.y).toBe(7)
       })
     })
 
@@ -51,7 +60,7 @@ describe('Point', function() {
         expect(point.y).toBe(4)
       })
     })
-    
+
     describe('with native SVGPoint given', function() {
       it('creates a point from native SVGPoint', function() {
         var point = new SVG.Point(new SVG.Point(2,4).native())
@@ -76,7 +85,7 @@ describe('Point', function() {
   describe('morph()', function() {
     it('stores a given point for morphing', function() {
       var point1 = new SVG.Point(1,1)
-        , point2 = new SVG.Matrix(2,2)
+        , point2 = new SVG.Point(2,2)
 
       point1.morph(point2)
 
@@ -84,11 +93,19 @@ describe('Point', function() {
     })
     it('stores a clone, not the given matrix itself', function() {
       var point1 = new SVG.Point(1,1)
-        , point2 = new SVG.Matrix(2,2)
+        , point2 = new SVG.Point(2,2)
 
       point1.morph(point2)
 
       expect(point1.destination).not.toBe(point2)
+    })
+    it('allow passing the point by directly passing its coordinates', function() {
+      var point1 = new SVG.Point(1,1)
+        , point2 = new SVG.Point(2,2)
+
+      point1.morph(point2.x, point2.y)
+
+      expect(point1.destination).toEqual(point2)
     })
   })
 
@@ -96,9 +113,9 @@ describe('Point', function() {
     it('returns a morphed point at a given position', function() {
       var point1 = new SVG.Point(1,1)
         , point2 = new SVG.Point(2,2)
-        , matrix3 = matrix1.morph(matrix2).at(0.5)
+        , point3 = point1.morph(point2).at(0.5)
 
-      expect(matrix3).toEqual(new SVG.Point(1.5, 1.5))
+      expect(point3).toEqual(new SVG.Point(1.5, 1.5))
     })
   })
 
@@ -107,14 +124,13 @@ describe('Point', function() {
       var point = new SVG.Point(1,5)
         , matrix = new SVG.Matrix(0,0,1,0,0,1)
 
-      expect(point.transform(matrox)).toEqual(new SVG.Point(5,1))
+      expect(point.transform(matrix)).toEqual(new SVG.Point(5,1))
     })
-  }
+  })
 
   describe('native()', function() {
     it('returns native SVGPoint', function() {
       expect(new SVG.Point().native() instanceof SVGPoint).toBeTruthy()
     })
   })
-
 })

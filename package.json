@@ -1,16 +1,16 @@
 {
   "name": "svg.js",
-  "version": "2.3.0",
+  "version": "2.3.6",
   "description": "A lightweight library for manipulating and animating SVG.",
-  "url": "http://svgjs.com",
-  "homepage": "http://www.svgjs.com",
+  "url": "https://svgdotjs.github.io/",
+  "homepage": "https://svgdotjs.github.io/",
   "keywords": [
     "svg",
     "vector",
     "graphics",
     "animation"
   ],
-  "author": "Wout Fierens <wout@woutfierens.com>",
+  "author": "Wout Fierens <wout@mick-wout.com>",
   "main": "dist/svg.js",
   "jam": {
     "include": [
@@ -22,8 +22,8 @@
   "maintainers": [
     {
       "name": "Wout Fierens",
-      "email": "wout@svgjs.com",
-      "web": "http://svgjs.com"
+      "email": "wout@mick-wout.com",
+      "web": "https://svgdotjs.github.io/"
     },
     {
       "name": "Alex Ewerlöf",
@@ -33,6 +33,11 @@
     {
       "name": "Ulrich-Matthias Schäfer",
       "email": "ulima.ums@googlemail.com"
+    },
+    {
+      "name": "Jon Ege Ronnenberg",
+      "email": "jon.ronnenberg+svgjs@gmail.com",
+      "url": "https://keybase.io/dotnetcarpenter"
     }
   ],
   "licenses": [
@@ -43,30 +48,37 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/wout/svg.js.git"
+    "url": "https://github.com/svgdotjs/svg.js.git"
   },
-  "github": "https://github.com/wout/svg.js",
+  "github": "https://github.com/svgdotjs/svg.js",
   "license": "MIT",
   "typings": "./svg.js.d.ts",
+  "scripts": {
+    "build": "gulp",
+    "build:test": "gulp unify",
+    "test": "karma start .config/karma.conf.js --single-run",
+    "test:quick": "karma start .config/karma.quick.js",
+    "docs": "gulp docs"
+  },
   "devDependencies": {
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-es2015-modules-commonjs": "^6.8.0",
-    "babel-plugin-transform-merge-sibling-variables": "^6.8.0",
-    "babel-plugin-transform-minify-booleans": "^6.8.0",
-    "babel-preset-es2015": "^6.6.0",
-    "del": "^1.2.0",
+    "coveralls": "^2.11.15",
+    "del": "^2.2.0",
     "gulp": "^3.8.6",
-    "gulp-chmod": "^1.2.0",
+    "gulp-chmod": "^2.0.0",
+    "gulp-cli": "^1.2.2",
+    "gulp-concat": "^2.3.3",
     "gulp-header": "^1.0.5",
-    "gulp-jasmine": "^0.3.0",
     "gulp-rename": "^1.2.0",
-    "gulp-sequence": "^0.4.5",
-    "gulp-size": "^0.4.0",
-    "gulp-sourcemaps": "^1.6.0",
+    "gulp-size": "^2.1.0",
     "gulp-trimlines": "^1.0.0",
-    "gulp-uglify": "^0.3.1",
-    "gulp-util": "^3.0.7",
-    "request": "^2.37.0",
-    "webpack-stream": "latest"
+    "gulp-uglify": "^2.0.0",
+    "gulp-wrap": "^0.13.0",
+    "jasmine-core": "^2.5.2",
+    "karma": "^1.3.0",
+    "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "request": "^2.78.0"
   }
 }

@@ -116,7 +116,7 @@ export default class Matrix{
   // Scale matrix
   scale(x, y, cx, cy) {
     // support universal scale
-    if (arguments.length == 1 || arguments.length == 3)
+    if (arguments.length == 1)
       y = x
     if (arguments.length == 3) {
       cy = cx
@@ -138,22 +138,35 @@ export default class Matrix{
   }
   // Skew
   skew(x, y, cx, cy) {
-    return this.around(cx, cy, this.native().skewX(x || 0).skewY(y || 0))
+    // support uniformal skew
+    if (arguments.length == 1) {
+      y = x
+    } else if (arguments.length == 3) {
+      cy = cx
+      cx = y
+      y = x
+    }
+
+    // convert degrees to radians
+    x = SVG.utils.radians(x)
+    y = SVG.utils.radians(y)
+
+    return this.around(cx, cy, new SVG.Matrix(1, Math.tan(y), Math.tan(x), 1, 0, 0))
   }
   // SkewX
   skewX(x, cx, cy) {
-    return this.around(cx, cy, this.native().skewX(x || 0))
+    return this.skew(x, 0, cx, cy)
   }
   // SkewY
   skewY(y, cx, cy) {
-    return this.around(cx, cy, this.native().skewY(y || 0))
+    return this.skew(0, y, cx, cy)
   }
   // Transform around a center point
   around(cx, cy, matrix) {
     return this
-      .multiply(new Matrix(1, 0, 0, 1, cx || 0, cy || 0))
+      .multiply(new SVG.Matrix(1, 0, 0, 1, cx || 0, cy || 0))
       .multiply(matrix)
-      .multiply(new Matrix(1, 0, 0, 1, -cx || 0, -cy || 0))
+      .multiply(new SVG.Matrix(1, 0, 0, 1, -cx || 0, -cy || 0))
   }
   // Convert to native SVGMatrix
   native() {

@@ -2,7 +2,6 @@ var del     = require('del')
   , gulp    = require('gulp')
   , chmod   = require('gulp-chmod')
   , header  = require('gulp-header')
-  , jasmine = require('gulp-jasmine')
   , rename  = require('gulp-rename')
   , size    = require('gulp-size')
   , trim    = require('gulp-trimlines')
@@ -27,8 +26,64 @@ var headerLong = ['/*!'
 
 var headerShort = '/*! <%= pkg.name %> v<%= pkg.version %> <%= pkg.license %>*/;'
 
-gulp.task('clean', function(cb) {
-  del([ 'dist/*' ], cb);
+// all files in the right order (currently we don't use any dependency management system)
+var parts = [
+  'src/svg.js'
+, 'src/regex.js'
+, 'src/utilities.js'
+, 'src/default.js'
+, 'src/color.js'
+, 'src/array.js'
+, 'src/pointarray.js'
+, 'src/patharray.js'
+, 'src/number.js'
+, 'src/element.js'
+, 'src/fx.js'
+, 'src/boxes.js'
+, 'src/matrix.js'
+, 'src/point.js'
+, 'src/attr.js'
+, 'src/transform.js'
+, 'src/style.js'
+, 'src/parent.js'
+, 'src/ungroup.js'
+, 'src/container.js'
+, 'src/viewbox.js'
+, 'src/event.js'
+, 'src/defs.js'
+, 'src/group.js'
+, 'src/arrange.js'
+, 'src/mask.js'
+, 'src/clip.js'
+, 'src/gradient.js'
+, 'src/pattern.js'
+, 'src/doc.js'
+, 'src/shape.js'
+, 'src/bare.js'
+, 'src/use.js'
+, 'src/rect.js'
+, 'src/ellipse.js'
+, 'src/line.js'
+, 'src/poly.js'
+, 'src/pointed.js'
+, 'src/path.js'
+, 'src/image.js'
+, 'src/text.js'
+, 'src/textpath.js'
+, 'src/nested.js'
+, 'src/hyperlink.js'
+, 'src/marker.js'
+, 'src/sugar.js'
+, 'src/set.js'
+, 'src/data.js'
+, 'src/memory.js'
+, 'src/selector.js'
+, 'src/helpers.js'
+, 'src/polyfill.js'
+]
+
+gulp.task('clean', function() {
+  return del([ 'dist/*' ])
 })
 
 /**
@@ -43,7 +98,7 @@ gulp.task('unify', ['clean'], function() {
     .pipe(webpack(require('./webpack.config.js')))
     .pipe(header(headerLong, { pkg: pkg }))
     .pipe(trim({ leading: false }))
-    .pipe(chmod(644))
+    .pipe(chmod(0o644))
     .pipe(gulp.dest('dist'))
     .pipe(size({ showFiles: true, title: 'Full' }))
 })
@@ -59,7 +114,7 @@ gulp.task('minify', ['unify'], function() {
     .pipe(rename({ suffix:'.min' }))
     .pipe(size({ showFiles: true, title: 'Minified' }))
     .pipe(header(headerShort, { pkg: pkg }))
-    .pipe(chmod(644))
+    .pipe(chmod(0o644))
     .pipe(gulp.dest('dist'))
     .pipe(size({ showFiles: true, gzip: true, title: 'Gzipped' }))
 })
@@ -84,5 +139,4 @@ gulp.task('docs', function() {
   })
 })
 
-gulp.task('default', ['clean', 'unify', 'minify'], function() {})
-gulp.task('build', ['default'])
+gulp.task('default', ['clean', 'unify', 'minify'])

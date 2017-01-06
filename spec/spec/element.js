@@ -1,11 +1,8 @@
 describe('Element', function() {
 
   beforeEach(function() {
-    draw.attr('viewBox', null)
-  })
-
-  afterEach(function() {
     draw.clear()
+    draw.attr('viewBox', null)
   })
 
   it('should create a circular reference on the node', function() {
@@ -176,7 +173,7 @@ describe('Element', function() {
       rect.transform({ x: 10, y: 11 }).transform({ x: 20, y: 21 }, true)
       expect(rect.node.getAttribute('transform')).toBe('matrix(1,0,0,1,30,32)')
     })
-    it('sets the scaleX and scaleY of and element', function() {
+    it('sets the scaleX and scaleY of an element', function() {
       rect.transform({ scaleX: 0.5, scaleY: 2 })
       expect(rect.node.getAttribute('transform')).toBe('matrix(0.5,0,0,2,25,-50)')
     })
@@ -192,7 +189,7 @@ describe('Element', function() {
       rect.transform({ scaleX: 0.5, scaleY: 2 }).transform({ scaleX: 3, scaleY: 4 }, true)
       expect(rect.node.getAttribute('transform')).toBe('matrix(1.5,0,0,8,-25,-350)')
     })
-    it('sets the skewX of and element with center on the element', function() {
+    it('sets the skewX of an element with center on the element', function() {
       ctm = rect.transform({ skewX: 10 }).ctm()
       expect(ctm.a).toBe(1)
       expect(ctm.b).toBe(0)
@@ -201,7 +198,7 @@ describe('Element', function() {
       expect(ctm.e).toBeCloseTo(-8.81634903542325)
       expect(ctm.f).toBe(0)
     })
-    it('sets the skewX of and element with given center', function() {
+    it('sets the skewX of an element with given center', function() {
       ctm = rect.transform({ skewX: 10, cx: 0, cy: 0 }).ctm()
       expect(ctm.a).toBe(1)
       expect(ctm.b).toBe(0)
@@ -210,11 +207,29 @@ describe('Element', function() {
       expect(ctm.e).toBe(0)
       expect(ctm.f).toBe(0)
     })
-    it('sets the skewY of and element', function() {
+    it('sets the skewY of an element', function() {
       ctm = rect.transform({ skewY: -10, cx: 0, cy: 0 }).ctm()
       expect(ctm.a).toBe(1)
       expect(ctm.b).toBeCloseTo(-0.17632698070846498)
       expect(ctm.c).toBe(0)
+      expect(ctm.d).toBe(1)
+      expect(ctm.e).toBe(0)
+      expect(ctm.f).toBe(0)
+    })
+    it('sets the skewX and skewY of an element', function() {
+      ctm = rect.transform({ skewX: 10, skewY: -10, cx: 0, cy: 0 }).ctm()
+      expect(ctm.a).toBe(1)
+      expect(ctm.b).toBeCloseTo(-0.17632698070846498)
+      expect(ctm.c).toBeCloseTo(0.17632698070846498)
+      expect(ctm.d).toBe(1)
+      expect(ctm.e).toBe(0)
+      expect(ctm.f).toBe(0)
+    })
+    it('performs a uniform skew with skew given', function() {
+      ctm = rect.transform({ skew: 5, cx: 0, cy: 0 }).ctm()
+      expect(ctm.a).toBe(1)
+      expect(ctm.b).toBeCloseTo(0.08748866352592401)
+      expect(ctm.c).toBeCloseTo(0.08748866352592401)
       expect(ctm.d).toBe(1)
       expect(ctm.e).toBe(0)
       expect(ctm.f).toBe(0)
@@ -260,6 +275,43 @@ describe('Element', function() {
       expect(circle.ctm()).toEqual(new SVG.Matrix(1,0,0,1,50,100))
       circle.untransform()
       expect(circle.ctm()).toEqual(new SVG.Matrix)
+    })
+  })
+
+  describe('matrixify', function() {
+    var rect
+
+    beforeEach(function() {
+      rect = draw.rect(100, 100)
+    })
+
+    it('allow individual transform definitions to be separated by whitespace', function(){
+      // One space
+      rect.attr('transform', 'translate(20) translate(20)')
+      expect(rect.matrixify().toString()).toBe('matrix(1,0,0,1,40,0)')
+
+      // More than one space
+      rect.attr('transform', 'translate(20)   translate(-60)')
+      expect(rect.matrixify().toString()).toBe('matrix(1,0,0,1,-40,0)')
+    })
+
+    it('allow individual transform definitions to be separated by a comma', function(){
+      rect.attr('transform', 'translate(20,16),translate(20)')
+      expect(rect.matrixify().toString()).toBe('matrix(1,0,0,1,40,16)')
+    })
+
+    it('allow individual transform definitions to be separated by whitespace and a comma', function(){
+      // Spaces before the comma
+      rect.attr('transform', 'translate(20,16)  ,translate(20)')
+      expect(rect.matrixify().toString()).toBe('matrix(1,0,0,1,40,16)')
+
+      // Spaces after the comma
+      rect.attr('transform', 'translate(12),  translate(10,14)')
+      expect(rect.matrixify().toString()).toBe('matrix(1,0,0,1,22,14)')
+
+      // Spaces before and after the comma
+      rect.attr('transform', 'translate(24,14)  , translate(36,6)')
+      expect(rect.matrixify().toString()).toBe('matrix(1,0,0,1,60,20)')
     })
   })
 
@@ -447,6 +499,11 @@ describe('Element', function() {
       clone = rect.clone()
       expect(rect.next()).toBe(clone)
     })
+    it('inserts the clone in the specided parent', function() {
+      var g = draw.group()
+      clone = rect.clone(g)
+      expect(g.get(0)).toBe(clone)
+    })
   })
 
   describe('toString()', function() {
@@ -578,19 +635,35 @@ describe('Element', function() {
       it('returns full raw svg when called on the main svg doc', function() {
         draw.size(100,100).rect(100,100).id(null)
         draw.circle(100).fill('#f06').id(null)
-        expect(draw.svg()).toBe('<svg id="SvgjsSvg1000" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs" width="100" height="100"><rect width="100" height="100"></rect><circle r="50" cx="50" cy="50" fill="#ff0066"></circle></svg>')
+
+        var toBeTested = draw.svg()
+
+        // Test for different browsers namely Firefox and Chrome
+        expect(
+            toBeTested === '<svg xmlns:svgjs="http://svgjs.com/svgjs" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns="http://www.w3.org/2000/svg" height="100" width="100" id="' + draw.id() + '"><rect height="100" width="100"></rect><circle fill="#ff0066" cy="50" cx="50" r="50"></circle></svg>'
+         || toBeTested === '<svg id="' + draw.id() + '" width="100" height="100" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.com/svgjs"><rect width="100" height="100"></rect><circle r="50" cx="50" cy="50" fill="#ff0066"></circle></svg>').toBeTruthy()
+
       })
       it('returns partial raw svg when called on a sub group', function() {
         var group = draw.group().id(null)
         group.rect(100,100).id(null)
         group.circle(100).fill('#f06').id(null)
-        expect(group.svg()).toBe('<g><rect width="100" height="100"></rect><circle r="50" cx="50" cy="50" fill="#ff0066"></circle></g>')
+
+        var toBeTested = group.svg()
+
+        expect(
+            toBeTested === '<g><rect width="100" height="100"></rect><circle r="50" cx="50" cy="50" fill="#ff0066"></circle></g>'
+         || toBeTested === '<g><rect height="100" width="100"></rect><circle fill="#ff0066" cy="50" cx="50" r="50"></circle></g>').toBeTruthy()
       })
       it('returns a single element when called on an element', function() {
         var group = draw.group().id(null)
         group.rect(100,100).id(null)
         var circle = group.circle(100).fill('#f06').id(null)
-        expect(circle.svg()).toBe('<circle r="50" cx="50" cy="50" fill="#ff0066"></circle>')
+        var toBeTested = circle.svg()
+
+        expect(
+            toBeTested === '<circle r="50" cx="50" cy="50" fill="#ff0066"></circle>'
+         || toBeTested === '<circle fill="#ff0066" cy="50" cx="50" r="50"></circle>').toBeTruthy()
       })
     })
     describe('with raw svg given', function() {
@@ -612,7 +685,9 @@ describe('Element', function() {
       it('does not import on single elements, even with an argument it acts as a getter', function() {
         var rect   = draw.rect(100,100).id(null)
           , result = rect.svg('<circle r="300"></rect>')
-        expect(result).toBe('<rect width="100" height="100"></rect>')
+        expect(
+            result === '<rect width="100" height="100"></rect>'
+         || result === '<rect height="100" width="100"></rect>').toBeTruthy()
       })
     })
   })
@@ -644,8 +719,15 @@ describe('Element', function() {
   describe('point()', function() {
     it('creates a point from screen coordinates transformed in the elements space', function(){
       var rect = draw.rect(100,100)
-      expect(rect.point(2,5).x).toBeCloseTo(-6)
-      expect(rect.point(2,5).y).toBeCloseTo(-21)
+
+      var m = draw.node.getScreenCTM()
+      // alert([m.a, m.a, m.c, m.d, m.e, m.f].join(', '))
+
+      var translation = {x: m.e, y: m.f}
+      var pos = {x: 2, y:5}
+
+      expect(rect.point(pos.x, pos.y).x).toBeCloseTo(pos.x - translation.x)
+      expect(rect.point(pos.x, pos.y).y).toBeCloseTo(pos.y - translation.y)
     })
   })
 })

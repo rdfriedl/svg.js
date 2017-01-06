@@ -1,11 +1,12 @@
-import Element from 'element.js';
-import Group from 'group.js';
-import Text from 'text.js';
-import {extend, create} from 'svg.js';
-import svg_Number from 'number.js';
+import Element from './element.js';
+import Group from './group.js';
+import Text from './text.js';
+import {extend, create} from './svg.js';
+import svg_Number from './number.js';
 import Color from 'color.js';
-import Matrix from 'matrix.js';
-import regex from 'regex.js';
+import ViewBox from './viewbox.js';
+import Matrix from './matrix.js';
+import regex from './regex.js';
 
 export const easing = {
   '-': function(pos){return pos}
@@ -14,8 +15,10 @@ export const easing = {
 , '<': function(pos){return -Math.cos(pos * Math.PI / 2) + 1}
 }
 
-export function morph(from, to) {
-  return new MorphObj(from, to).at(pos)
+export function morph(pos) {
+  return function(from, to) {
+    return new MorphObj(from, to).at(pos)
+  }
 }
 
 export class Situation{
@@ -46,7 +49,7 @@ export class Situation{
 
     this.styles = {
       // holds all styles which should be animated
-      // e.g. fill-color: Color
+      // e.g. fill-color: SVG.Color
     }
 
     this.transforms = [
@@ -63,7 +66,7 @@ export class Situation{
 
 export class Delay{
   constructor(dealy){
-    this.delay = new Number(delay).valueOf()
+    this.delay = new svg_Number(delay).valueOf()
   }
 }
 
@@ -77,6 +80,7 @@ export default class FX{
     this.lastPos = 0
     this.pos = 0
   }
+
   /**
    * sets or returns the target of this animation
    * @param o object || number In case of Object it holds all parameters. In case of number its the duration of the animation
@@ -85,7 +89,6 @@ export default class FX{
    * @return target || this
    */
   animate(o, ease, delay){
-
     if(typeof o == 'object'){
       ease = o.ease
       delay = o.delay
@@ -283,7 +286,7 @@ export default class FX{
 
     this.active = false
 
-    if(jumpToEnd){
+    if(jumpToEnd && this.situation){
 
       this.situation.loop = false
 
@@ -316,7 +319,6 @@ export default class FX{
 
   // Stop the currently-running animation, remove all queued animations, and complete all animations for the element.
   finish(){
-
     this.stop(true, false)
 
     while(this.dequeue().situation && this.stop(true, false));
@@ -413,7 +415,7 @@ export default class FX{
     var c = this.last()
       , wrapper = function(e){
           if(e.detail.situation == c){
-            fn.call(this, e.detail.pos, morph, e.detail.eased, c)
+            fn.call(this, e.detail.pos, morph(e.detail.pos), e.detail.eased, c)
           }
         }
 
@@ -466,7 +468,6 @@ export default class FX{
    *  @return this
    */
   step(ignoreTime){
-
     // convert current time to position
     if(!ignoreTime) this.pos = this.timeToPos(+new Date)
 
@@ -534,7 +535,6 @@ export default class FX{
     // save last eased position for once callback triggering
     this.lastPos = eased
     return this
-
   }
 
   // calculates the step for every property and calls block with it
@@ -543,35 +543,29 @@ export default class FX{
 
     // apply animations which can be called trough a method
     for(i in s.animations){
-
       at = [].concat(s.animations[i]).map(function(el){
         return el.at ? el.at(s.ease(self.pos), self.pos) : el
       })
 
       target[i].apply(target, at)
-
     }
 
     // apply animation which has to be applied with attr()
     for(i in s.attrs){
-
       at = [i].concat(s.attrs[i]).map(function(el){
         return el.at ? el.at(s.ease(self.pos), self.pos) : el
       })
 
       target.attr.apply(target, at)
-
     }
 
     // apply animation which has to be applied with style()
     for(i in s.styles){
-
       at = [i].concat(s.styles[i]).map(function(el){
         return el.at ? el.at(s.ease(self.pos), self.pos) : el
       })
 
       target.style.apply(target, at)
-
     }
 
     // animate initialTransformation which has to be chained
@@ -609,13 +603,11 @@ export default class FX{
     }
 
     return this
-
   }
 
 
   // adds an once-callback which is called at a specific position and never again
   once(pos, fn, isEased){
-
     if(!isEased)pos = this.situation.ease(pos)
 
     this.situation.once[pos] = fn
@@ -697,6 +689,17 @@ extend(FX, {
 
     return this
   }
+  // Add animatable styles
+, style: function(s, v) {
+    if (typeof s == 'object')
+      for (var key in s)
+        this.style(key, s[key])
+
+    else
+      this.add(s, new MorphObj(null, v), 'styles')
+
+    return this
+  }
   // Animatable x-axis
 , x: function(x, relative) {
     if(this.target() instanceof Group){
@@ -773,5 +776,30 @@ extend(FX, {
     return this.target().leading ?
       this.add('leading', new svg_Number().morph(value)) :
       this
+  }
+  // Add animatable viewbox
+, viewbox: function(x, y, width, height) {
+    if (this.target() instanceof Container) {
+      this.add('viewbox', new ViewBox(x, y, width, height))
+    }
+
+    return this
+  }
+, update: function(o) {
+    if (this.target() instanceof Stop) {
+      if (typeof o == 'number' || o instanceof svg_Number) {
+        return this.update({
+          offset:  arguments[0]
+        , color:   arguments[1]
+        , opacity: arguments[2]
+        })
+      }
+
+      if (o.opacity != null) this.attr('stop-opacity', o.opacity)
+      if (o.color   != null) this.attr('stop-color', o.color)
+      if (o.offset  != null) this.attr('offset', o.offset)
+    }
+
+    return this
   }
 })

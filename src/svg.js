@@ -110,17 +110,23 @@ export function adopt(node) {
 export function prepare(element) {
   // Select document body and create invisible svg element
   var body = document.getElementsByTagName('body')[0]
-    , draw = (body ? new SVG.Doc(body) : element.nested()).size(2, 0)
-    , path = SVG.create('path')
-
-  // Insert parsers
-  draw.node.appendChild(path)
+    , draw = (body ? new SVG.Doc(body) :  new SVG.Doc(document.documentElement).nested()).size(2, 0)
 
   // Create parser object
   SVG.parser = {
-    body: body || element.parent()
+    body: body || document.documentElement
   , draw: draw.style('opacity:0;position:fixed;left:100%;top:100%;overflow:hidden')
   , poly: draw.polyline().node
-  , path: path
+  , path: draw.path().node
+  , native: SVG.create('svg')
   }
 }
+
+SVG.parser = {
+  native: SVG.create('svg')
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  if(!SVG.parser.draw)
+    SVG.prepare()
+}, false)

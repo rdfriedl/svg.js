@@ -1,11 +1,65 @@
 # 3.0.0
-
 - make transform-methods relative as default (breaking change)
 - added `'random'` option and `randomize()` method to `SVG.Color` -> __TODO!__
 - fixed a bug in clipping and masking where empty nodes persists after removal -> __TODO!__
 - fixed a bug in IE11 with `mouseenter` and `mouseleave` -> __TODO!__
 - added `precision()` method to round numeric element attributes -> __TODO!__
 - added specs for `SVG.FX` -> __TODO!__
+
+# 2.3.7
+- moved project to [svgdotjs](https://github.com/svgdotjs)
+- made matrixify work with transformation chain separated by commas (#543)
+- fixed `SVG.Matrix.skew()` (#545)
+- fixed broken animations, if using polyfills for es6/7 proposals (#504)
+- fixed and improved `SVG.FX.dequeue()` (#546)
+- fixed an error in `SVG.FX.step`, if custom properties is added to `Array.prototype` (#549)
+- updated dev dependencies; request and gulp-chmod - `npm run build` now requires nodejs 4.x
+- added code coverage https://coveralls.io/github/svgdotjs/svg.js (3e614d4)
+- added `npm run test:quick` which aim at being fast rather than correct - great for git hooks (981ce24)
+- added support for basic path animations (#561)
+
+# 2.3.6 (21/10/2016)
+- fixed leading and trailing space in SVG.PointArray would return NaN for some points (695f26a) (#529)
+- make SVG.FX.loop modify the last situation instead of the current one (#532)
+- fixed test of `SVG.FX.afterAll` (#534)
+- fixed `SVG.FX.speed()` (#536)
+
+# 2.3.5 (13/10/2016)
+- calling `fill()`, `stroke()` without an argument is now a nop
+- Polygon now accepts comma less points to achieve parity with Adobe Illustrator (#529)
+- added automated unit tests via [Travis](https://travis-ci.org/wout/svg.js) (#527)
+- updated dependencies
+- added `npm run build` to build a new version of SVG.js without requiring gulp to be globally installed
+
+# 2.3.4 (04/08/2016)
+- reworked parent module for speed improvemenents
+- reworked `filterSVGElements` utility to use a for loop instead of the native filter function
+
+# 2.3.3 (02/08/2016)
+- add error callback on image loading (#508)
+- fixed bug when getting bbox of text elements which are not in the dom (#514) 
+- fixed bug when getting bbox of element which is hidden with css (#516)
+
+# 2.3.2 (21/06/2016)
+- fixed string parsing in viewbox (#483)
+- added specs for `SVG.ViewBox`
+- fixed bbox when element is not in the dom (#480)
+- added `parent` parameter for `clone()`
+- fixed line constructor which doesn't work with Array as input (#487)
+- added spec for mentioned issue
+- fixed problem in IE with `document.contains` (#490) related to (#480)
+- fixed `undo` when undoing transformations (#494)
+
+# 2.3.1 (05/05/2016)
+- fixed `SVG.morph()` (#473)
+- fixed parser error (#471)
+- fixed bug in `SVG.Color` with new fx
+- fixed `radius()` for circles when animating and other related code (#477)
+- fixed bug where `stop(true)` throws an error when element is not animated (#475)
+- added typings for svg.js (#470)
+- fixed bug in `add()` when altering svgs with whitespaces
+- fixed bug in `SVG.Doc().create` where size was set to 100% even if size was already specified
+- fixed bug in `parse()` from `SVG.PathArray` which does not correctly handled `S` and `T` (#485)
 
 # 2.3.0 (30/03/2016)
 - added `SVG.Point` which serves as Wrapper to the native `SVGPoint` (#437)
@@ -30,7 +84,7 @@
 - double newlines (\n\n) are correctly handled as blank line from `text()`
 - fixed use of scrollX vs pageXOffset in `rbox()` (#425)
 - fixed target array in mask and clip which was removed instead of reinitialized (#429)
- 
+
 # 2.2.3 (30/11/2015)
 - fixed null check in image (see 2.2.2)
 - fixed bug related to the new path parser (see 2.2.2)

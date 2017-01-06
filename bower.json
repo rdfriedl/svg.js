@@ -1,9 +1,10 @@
 {
   "name": "svg.js",
-  "version":"2.3.0",
-  "homepage": "http://svgjs.com/",
+  "homepage": "https://svgdotjs.github.io/",
   "authors": [
-    "Wout Fierens <wout@impinc.co.uk>"
+    "Wout Fierens <wout@mick-wout.com>",
+    "Ulrich-Matthias Schäfer <ulima.ums@googlemail.com>",
+    "Jon Ege Ronnenberg <jon.ronnenberg+svgjs@gmail.com>"
   ],
   "description": "A lightweight library for manipulating and animating SVG",
   "main": "dist/svg.js",

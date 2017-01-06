@@ -18,10 +18,10 @@ export default class Line extends Shape{
   }
   // Overwrite native plot() method
   plot(x1, y1, x2, y2) {
-    if (arguments.length == 4)
+    if (typeof y1 !== 'undefined')
       x1 = { x1: x1, y1: y1, x2: x2, y2: y2 }
     else
-      x1 = new PointArray(x1).toLine()
+      x1 = new SVG.PointArray(x1).toLine()
 
     return this.attr(x1)
   }
@@ -31,7 +31,7 @@ export default class Line extends Shape{
   }
   // Set element size to given width and height
   size(width, height) {
-    var p = proportionalSize(this.bbox(), width, height)
+    var p = proportionalSize(this, width, height)
 
     return this.attr(this.array().size(p.width, p.height).toLine())
   }

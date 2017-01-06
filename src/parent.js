@@ -11,15 +11,12 @@ export default class Parent extends Element{
   }
   // Add given element at a position
   add(element, i) {
-    if (!this.has(element)) {
-      // define insertion index if none given
-      i = i == null ? this.children().length : i
+      if (i == null)
+        this.node.appendChild(element.node)
+      else if (element.node != this.node.childNodes[i])
+        this.node.insertBefore(element.node, this.node.childNodes[i])
 
-      // add element references
-      this.node.insertBefore(element.node, this.node.childNodes[i] || null)
-    }
-
-    return this
+      return this
   }
   // Basically does the same as `add()` but returns the added element instead
   put(element, i) {

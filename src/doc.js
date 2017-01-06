@@ -1,6 +1,7 @@
 import Container from 'container.js';
 import Defs from 'defs.js';
 import {create, adopt, xlink, ns, svgjs, xmlns} from 'svg.js';
+
 export default class Doc extends Container{
   constructor(element){
     if (element) {
@@ -17,7 +18,11 @@ export default class Doc extends Container{
       else {
         super(create('svg'));
         element.appendChild(this.node)
+        this.size('100%', '100%')
       }
+
+      // set svg element attributes and ensure defs node
+      this.namespace().defs()
     }
     else{
       super(create('svg'))
@@ -34,6 +39,7 @@ export default class Doc extends Container{
       .attr('xmlns:xlink', xlink, xmlns)
       .attr('xmlns:svgjs', svgjs, xmlns)
   }
+
   // Creates and returns defs element
   defs() {
     if (!this._defs) {
@@ -51,10 +57,12 @@ export default class Doc extends Container{
 
     return this._defs
   }
+
   // custom parent method
   parent() {
     return this.node.parentNode.nodeName == '#document' ? null : this.node.parentNode
   }
+
   // Fix for possible sub-pixel offset. See:
   // https://bugzilla.mozilla.org/show_bug.cgi?id=608812
   spof(spof) {
@@ -68,7 +76,7 @@ export default class Doc extends Container{
     return this
   }
 
-    // Removes the doc from the DOM
+  // Removes the doc from the DOM
   remove() {
     if(this.parent()) {
       this.parent().removeChild(this.node);

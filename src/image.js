@@ -11,26 +11,25 @@ export default class Image extends Shape{
   load(url) {
     if (!url) return this
 
-    var self = this
-      , img  = document.createElement('img')
+    var img = document.createElement('img')
 
     // preload image
-    img.onload = function() {
-      var p = self.parent(Pattern)
+    img.onload = () => {
+      var p = this.parent(Pattern)
 
       if(p === null) return
 
       // ensure image size
-      if (self.width() == 0 && self.height() == 0)
-        self.size(img.width, img.height)
+      if (this.width() == 0 && this.height() == 0)
+        this.size(img.width, img.height)
 
       // ensure pattern size if not set
       if (p && p.width() == 0 && p.height() == 0)
-        p.size(self.width(), self.height())
+        p.size(this.width(), this.height())
 
       // callback
-      if (typeof self._loaded === 'function')
-        self._loaded.call(self, {
+      if (typeof this._loaded === 'function')
+        this._loaded.call(this, {
           width:  img.width
         , height: img.height
         , ratio:  img.width / img.height
@@ -38,11 +37,22 @@ export default class Image extends Shape{
         })
     }
 
+    img.onerror = e => {
+      if (typeof this._error === 'function'){
+          this._error.call(this, e)
+      }
+    }
+
     return this.attr('href', (img.src = this.src = url), xlink)
   }
   // Add loaded callback
   loaded(loaded) {
     this._loaded = loaded
+    return this
+  }
+  // add an error callback
+  error(error){
+    this._error = error
     return this
   }
 }
