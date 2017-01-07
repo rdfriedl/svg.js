@@ -1,7 +1,7 @@
-import Shape from 'shape.js';
-import Container from 'container.js';
-import Pattern from 'pattern.js';
-import {extend, create, xlink} from 'svg.js';
+import Shape from './shape.js';
+import Container from './container.js';
+import Pattern from './pattern.js';
+import {extend, create, xlink} from './svg.js';
 
 export default class Image extends Shape{
   constructor(){

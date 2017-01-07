@@ -1,7 +1,7 @@
-import Parent from 'parent.js';
-import Defs from 'defs.js';
-import Doc from 'doc.js';
-import {extend} from 'svg.js';
+import Parent from './parent.js';
+import Defs from './defs.js';
+import Doc from './doc.js';
+import {extend} from './svg.js';
 
 extend(Parent, {
 

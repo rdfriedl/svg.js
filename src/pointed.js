@@ -1,7 +1,7 @@
-import PointArray from 'pointarray.js';
-import {Polyline, Polygon} from 'poly.js';
-import Line from 'line.js';
-import {extend} from 'svg.js';
+import PointArray from './pointarray.js';
+import {Polyline, Polygon} from './poly.js';
+import Line from './line.js';
+import {extend} from './svg.js';
 
 // unify all point to point elements
 extend(Line, Polyline, Polygon, {

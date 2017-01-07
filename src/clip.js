@@ -1,6 +1,6 @@
-import Container from 'container.js';
-import Element from 'element.js';
-import {extend, create} from 'svg.js';
+import Container from './container.js';
+import Element from './element.js';
+import {extend, create} from './svg.js';
 
 export default class ClipPath extends Container{
   constructor(){

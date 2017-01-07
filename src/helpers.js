@@ -1,3 +1,14 @@
+var Matrix, regex, svg_Number, Color, utils, adopt, eid;
+require('./circularReferenceFix.js').callbacks.push(() => {
+  Matrix = require('./matrix.js').default
+  regex = require('./regex').default
+  svg_Number = require('./number.js').default
+  utils = require('./utilities.js').default
+  Color = require('./color.js').default
+  adopt = require('./svg.js').adopt
+  eid = require('./ids.js').eid
+})
+
 export function is(el, obj){
   return el instanceof obj
 }
@@ -67,8 +78,8 @@ export function arrayToMatrix(a) {
 
 // Parse matrix if required
 export function parseMatrix(matrix) {
-  if (!(matrix instanceof SVG.Matrix))
-    matrix = new SVG.Matrix(matrix)
+  if (!(matrix instanceof Matrix))
+    matrix = new Matrix(matrix)
 
   return matrix
 }
@@ -83,13 +94,13 @@ export function ensureCentre(o, target) {
 export function stringToMatrix(source) {
   // remove matrix wrapper and split to individual numbers
   source = source
-    .replace(SVG.regex.whitespace, '')
-    .replace(SVG.regex.matrix, '')
-    .split(SVG.regex.matrixElements)
+    .replace(regex.whitespace, '')
+    .replace(regex.matrix, '')
+    .split(regex.matrixElements)
 
   // convert string values to floats and convert to a matrix-formatted object
   return arrayToMatrix(
-    SVG.utils.map(source, function(n) {
+    utils.map(source, function(n) {
       return parseFloat(n)
     })
   )
@@ -102,7 +113,7 @@ export function at(o, pos) {
     o.from + (o.to - o.from) * pos :
 
   // instance recalculation
-  o instanceof SVG.Color || o instanceof SVG.Number || o instanceof SVG.Matrix ? o.at(pos) :
+  o instanceof Color || o instanceof svg_Number || o instanceof Matrix ? o.at(pos) :
 
   // for all other values wait until pos has reached 1 to return the final value
   pos < 1 ? o.from : o.to
@@ -152,7 +163,7 @@ export function assignNewId(node) {
     if (node.childNodes[i] instanceof SVGElement)
       assignNewId(node.childNodes[i])
 
-  return SVG.adopt(node).id(SVG.eid(node.nodeName))
+  return adopt(node).id(eid(node.nodeName))
 }
 
 // Add more bounding box properties
@@ -176,7 +187,7 @@ export function fullBox(b) {
 
 // Get id from reference string
 export function idFromReference(url) {
-  var m = url.toString().match(SVG.regex.reference)
+  var m = url.toString().match(regex.reference)
 
   if (m) return m[1]
 }

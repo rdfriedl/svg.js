@@ -1,7 +1,7 @@
-import Element from 'element.js';
-import utils from 'utilities.js';
-import {extend} from 'svg.js';
-import {arrayToMatrix, abcdef, deltaTransformPoint, parseMatrix, stringToMatrix} from 'helpers.js';
+import Element from './element.js';
+import utils from './utilities.js';
+import {extend} from './svg.js';
+import {arrayToMatrix, abcdef, deltaTransformPoint, parseMatrix, stringToMatrix} from './helpers.js';
 
 export default class Matrix{
   constructor(source){
@@ -148,10 +148,10 @@ export default class Matrix{
     }
 
     // convert degrees to radians
-    x = SVG.utils.radians(x)
-    y = SVG.utils.radians(y)
+    x = utils.radians(x)
+    y = utils.radians(y)
 
-    return this.around(cx, cy, new SVG.Matrix(1, Math.tan(y), Math.tan(x), 1, 0, 0))
+    return this.around(cx, cy, new Matrix(1, Math.tan(y), Math.tan(x), 1, 0, 0))
   }
   // SkewX
   skewX(x, cx, cy) {
@@ -164,9 +164,9 @@ export default class Matrix{
   // Transform around a center point
   around(cx, cy, matrix) {
     return this
-      .multiply(new SVG.Matrix(1, 0, 0, 1, cx || 0, cy || 0))
+      .multiply(new Matrix(1, 0, 0, 1, cx || 0, cy || 0))
       .multiply(matrix)
-      .multiply(new SVG.Matrix(1, 0, 0, 1, -cx || 0, -cy || 0))
+      .multiply(new Matrix(1, 0, 0, 1, -cx || 0, -cy || 0))
   }
   // Convert to native SVGMatrix
   native() {

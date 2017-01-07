@@ -1,6 +1,6 @@
-import Container from 'container.js';
-import Element from 'element.js';
-import {create, extend, xlink} from 'svg.js';
+import Container from './container.js';
+import Element from './element.js';
+import {create, extend, xlink} from './svg.js';
 export default class A extends Container{
   constructor(){
     super(create('a'));

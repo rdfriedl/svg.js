@@ -1,5 +1,5 @@
-import Element from 'element.js';
-import {extend} from 'svg.js';
+import Element from './element.js';
+import {extend, parser} from './svg.js';
 
 export default class Point{
   constructor(x,y){

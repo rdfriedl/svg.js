@@ -1,9 +1,9 @@
-import Element from 'element.js';
-import Container from 'container.js';
-import Doc from 'doc.js';
-import svg_Number from 'number.js';
-import FX from 'fx.js';
-import {extend} from 'svg.js';
+import Element from './element.js';
+import Container from './container.js';
+import Doc from './doc.js';
+import svg_Number from './number.js';
+import FX from './fx.js';
+import {extend} from './svg.js';
 
 export default class ViewBox{
   constructor(source) {
@@ -114,7 +114,7 @@ extend(Container, {
   viewbox(v) {
     if (arguments.length == 0)
       // act as a getter if there are no arguments
-      return new SVG.ViewBox(this)
+      return new ViewBox(this)
 
     // otherwise act as a setter
     v = arguments.length == 1 ?

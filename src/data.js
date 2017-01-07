@@ -1,5 +1,5 @@
-import Element from 'element.js';
-import {extend} from 'svg.js';
+import Element from './element.js';
+import {extend} from './svg.js';
 extend(Element, {
   // Store data values on svg nodes
   data: function(a, v, r) {

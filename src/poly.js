@@ -1,8 +1,8 @@
-import Shape from 'shape.js';
-import Container from 'container.js';
-import PointArray from 'pointarray.js';
-import {extend, create} from 'svg.js';
-import {proportionalSize} from 'helpers.js';
+import Shape from './shape.js';
+import Container from './container.js';
+import PointArray from './pointarray.js';
+import {extend, create} from './svg.js';
+import {proportionalSize} from './helpers.js';
 
 export class Polyline extends Shape{
   constructor(){

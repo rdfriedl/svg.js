@@ -1,7 +1,7 @@
-import Container from 'container.js';
-import Parent from 'parent.js';
-import Text from 'text.js';
-import {extend, create, adopt, xlink} from 'svg.js';
+import Container from './container.js';
+import Parent from './parent.js';
+import Text from './text.js';
+import {extend, create, adopt, xlink} from './svg.js';
 
 export default class TextPath extends Parent{
   constructor(){

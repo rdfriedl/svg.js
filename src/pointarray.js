@@ -1,6 +1,6 @@
-import _Array from 'array.js';
+import svg_Array from './array.js';
 
-export default class PointArray extends _Array{
+export default class PointArray extends svg_Array{
   constructor(array, fallback) {
     super(array, fallback || [[0,0]])
   }

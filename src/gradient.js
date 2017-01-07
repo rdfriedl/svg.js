@@ -1,9 +1,9 @@
-import Element from 'element.js';
-import Container from 'container.js';
-import Defs from 'defs.js';
-import svg_Number from 'number.js';
-import {create, extend} from 'svg.js';
-import FX from 'fx.js';
+import Element from './element.js';
+import Container from './container.js';
+import Defs from './defs.js';
+import svg_Number from './number.js';
+import {create, extend} from './svg.js';
+import FX from './fx.js';
 
 export default class Gradient extends Container{
   constructor(type){
@@ -63,14 +63,14 @@ extend(Gradient, FX, {
   // From position
   from: function(x, y) {
     return (this._target || this).type == 'radial' ?
-      this.attr({ fx: new SVG.Number(x), fy: new SVG.Number(y) }) :
-      this.attr({ x1: new SVG.Number(x), y1: new SVG.Number(y) })
+      this.attr({ fx: new svg_Number(x), fy: new svg_Number(y) }) :
+      this.attr({ x1: new svg_Number(x), y1: new svg_Number(y) })
   }
   // To position
 , to: function(x, y) {
     return (this._target || this).type == 'radial' ?
-      this.attr({ cx: new SVG.Number(x), cy: new SVG.Number(y) }) :
-      this.attr({ x2: new SVG.Number(x), y2: new SVG.Number(y) })
+      this.attr({ cx: new svg_Number(x), cy: new svg_Number(y) }) :
+      this.attr({ x2: new svg_Number(x), y2: new svg_Number(y) })
   }
 })
 

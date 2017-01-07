@@ -1,6 +1,6 @@
-import Container from 'container.js';
-import Defs from 'defs.js';
-import {create, extend} from 'svg.js';
+import Container from './container.js';
+import Defs from './defs.js';
+import {create, extend} from './svg.js';
 
 export default class Pattern extends Container{
   constructor(){

@@ -1,5 +1,5 @@
-import regex from 'regex.js';
-import {fullHex, compToHex} from 'helpers.js';
+import regex from './regex.js';
+import {fullHex, compToHex} from './helpers.js';
 export default class Color{
   constructor(color){
     var match
@@ -13,18 +13,18 @@ export default class Color{
 
     // parse color
     if (typeof color === 'string') {
-      if (SVG.regex.isRgb.test(color)) {
+      if (regex.isRgb.test(color)) {
         // get rgb values
-        match = SVG.regex.rgb.exec(color.replace(/\s/g,''))
+        match = regex.rgb.exec(color.replace(/\s/g,''))
 
         // parse numeric values
         this.r = parseInt(match[1])
         this.g = parseInt(match[2])
         this.b = parseInt(match[3])
 
-      } else if (SVG.regex.isHex.test(color)) {
+      } else if (regex.isHex.test(color)) {
         // get hex values
-        match = SVG.regex.hex.exec(fullHex(color))
+        match = regex.hex.exec(fullHex(color))
 
         // parse numeric values
         this.r = parseInt(match[1], 16)

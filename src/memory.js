@@ -1,5 +1,5 @@
-import Element from 'element.js';
-import {extend} from 'svg.js';
+import Element from './element.js';
+import {extend} from './svg.js';
 extend(Element, {
   // Remember arbitrary data
   remember: function(k, v) {

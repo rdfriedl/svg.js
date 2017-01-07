@@ -1,8 +1,8 @@
-import Element from 'element.js';
-import FX, {MorphObj} from 'fx.js';
-import {extend} from 'svg.js';
-import regex from 'regex.js';
-import {camelCase} from 'helpers.js';
+import Element from './element.js';
+import FX, {MorphObj} from './fx.js';
+import {extend} from './svg.js';
+import regex from './regex.js';
+import {camelCase} from './helpers.js';
 
 extend(Element, {
   // Dynamic style generator

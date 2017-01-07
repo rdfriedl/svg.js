@@ -1,5 +1,13 @@
-// Karma configuration
-// Generated on Tue Oct 04 2016 13:53:46 GMT+0200 (CEST)
+var webpackConfig = require('./webpack.dev.config.js');
+
+// delete the entry file since karma supplies that
+delete webpackConfig.entry;
+
+// turn on inline source maps so karma can read them
+webpackConfig.devtool = 'inline-source-map';
+
+// fail the tests if there was a compile error
+webpackConfig.bail = true;
 
 module.exports = function(config) {
   config.set({
@@ -26,8 +34,7 @@ module.exports = function(config) {
         included: false,
         served: true
       },
-      'dist/svg.js',
-      'spec/spec/**/*.js'
+      'spec/index.js'
     ],
 
 
@@ -38,7 +45,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'dist/svg.js': ['coverage']
+      'spec/index.js': ['webpack', 'sourcemap', 'coverage']
     },
 
 
@@ -79,7 +86,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Firefox'],
+    browsers: ['Firefox', 'Chrome'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
@@ -87,6 +94,14 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    // use the webpack config
+    webpack: require('./webpack.dev.config.js'),
+
+    // avoid walls of useless text
+    webpackMiddleware: {
+      noInfo: true
+    }
   })
 }

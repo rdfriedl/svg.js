@@ -1,6 +1,6 @@
-import Element from 'element.js';
-import Container from 'container.js';
-import {create, extend} from 'svg.js';
+import Element from './element.js';
+import Container from './container.js';
+import {create, extend} from './svg.js';
 
 export default class Mask extends Container{
   constructor(){

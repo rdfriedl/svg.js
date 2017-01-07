@@ -1,6 +1,6 @@
-import Element from 'element.js';
-import utils from 'utilities.js';
-import {adopt} from 'svg.js';
+import Element from './element.js';
+import utils from './utilities.js';
+import {adopt} from './svg.js';
 
 export default class Parent extends Element{
   // Returns all child elements
@@ -80,5 +80,3 @@ export default class Parent extends Element{
     return this.doc().defs()
   }
 }
-
-// import Container from 'container.js';

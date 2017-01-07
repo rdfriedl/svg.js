@@ -1,8 +1,8 @@
-import Container from 'container.js';
-import FX from 'fx.js';
-import Shape from 'shape.js';
-import {BBox} from 'boxes.js';
-import {create, extend} from 'svg.js';
+import Container from './container.js';
+import FX from './fx.js';
+import Shape from './shape.js';
+import {BBox} from './boxes.js';
+import {create, extend} from './svg.js';
 
 export default class Set{
   constructor(members){

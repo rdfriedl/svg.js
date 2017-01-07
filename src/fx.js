@@ -3,7 +3,7 @@ import Group from './group.js';
 import Text from './text.js';
 import {extend, create} from './svg.js';
 import svg_Number from './number.js';
-import Color from 'color.js';
+import Color from './color.js';
 import ViewBox from './viewbox.js';
 import Matrix from './matrix.js';
 import regex from './regex.js';

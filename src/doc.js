@@ -1,6 +1,6 @@
-import Container from 'container.js';
-import Defs from 'defs.js';
-import {create, adopt, xlink, ns, svgjs, xmlns} from 'svg.js';
+import Container from './container.js';
+import Defs from './defs.js';
+import {create, adopt, xlink, ns, svgjs, xmlns} from './svg.js';
 
 export default class Doc extends Container{
   constructor(element){

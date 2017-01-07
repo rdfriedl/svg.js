@@ -1,5 +1,5 @@
-import Container from 'container.js';
-import {create, extend} from 'svg.js';
+import Container from './container.js';
+import {create, extend} from './svg.js';
 export default class Group extends Container{
   constructor(){
     super(create('g'));

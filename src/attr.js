@@ -1,12 +1,12 @@
-import Element from 'element.js';
-import svg_Image from 'image.js';
-import Color from 'color.js';
-import svg_Number from 'number.js';
-import svg_Array from 'array.js';
-import Matrix from 'matrix.js';
-import {extend} from 'svg.js';
-import regex from 'regex.js';
-import defaults from 'default.js';
+import Element from './element.js';
+import svg_Image from './image.js';
+import Color from './color.js';
+import svg_Number from './number.js';
+import svg_Array from './array.js';
+import Matrix from './matrix.js';
+import {extend} from './svg.js';
+import regex from './regex.js';
+import defaults from './default.js';
 
 extend(Element, {
   // Set svg element attribute

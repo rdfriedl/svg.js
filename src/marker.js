@@ -1,10 +1,10 @@
-import Element from 'element.js';
-import Defs from 'defs.js';
-import Container from 'container.js';
-import {Polyline, Polygon} from 'poly.js';
-import Line from 'line.js';
-import Path from 'path.js';
-import {create, extend} from 'svg.js';
+import Element from './element.js';
+import Defs from './defs.js';
+import Container from './container.js';
+import {Polyline, Polygon} from './poly.js';
+import Line from './line.js';
+import Path from './path.js';
+import {create, extend} from './svg.js';
 
 export default class Marker extends Container{
   constructor(){

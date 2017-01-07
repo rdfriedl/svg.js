@@ -1,4 +1,4 @@
-import {capitalize} from 'helpers.js'
+import {capitalize} from './helpers.js'
 
 let did = 1000;
 

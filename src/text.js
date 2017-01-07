@@ -1,11 +1,11 @@
-import Shape from 'shape.js';
-import Container from 'container.js';
-import svg_Set from 'set.js';
-import svg_Number from 'number.js';
-import defaults from 'default.js';
-import utils from 'utilities.js';
-import {create, extend, adopt} from 'svg.js';
-import {assignNewId} from 'helpers.js';
+import Shape from './shape.js';
+import Container from './container.js';
+import svg_Set from './set.js';
+import svg_Number from './number.js';
+import defaults from './default.js';
+import utils from './utilities.js';
+import {create, extend, adopt} from './svg.js';
+import {assignNewId} from './helpers.js';
 
 export default class Text extends Shape{
   constructor(){

@@ -1,10 +1,10 @@
-import Shape from 'shape.js';
-import FX from 'fx.js';
-import Container from 'container.js';
-import Number from 'number.js';
-import Rect from 'rect.js';
-import {extend, create} from 'svg.js';
-import {proportionalSize} from 'helpers.js';
+import Shape from './shape.js';
+import FX from './fx.js';
+import Container from './container.js';
+import svg_Number from './number.js';
+import Rect from './rect.js';
+import {extend, create} from './svg.js';
+import {proportionalSize} from './helpers.js';
 
 export class Circle extends Shape{
   constructor(){
@@ -14,7 +14,7 @@ export class Circle extends Shape{
 extend(Container, {
   // Create circle element, based on ellipse
   circle: function(size) {
-    return this.put(new Circle).rx(new Number(size).divide(2)).move(0, 0)
+    return this.put(new Circle).rx(new svg_Number(size).divide(2)).move(0, 0)
   }
 })
 
@@ -72,18 +72,18 @@ extend(Circle, Ellipse, {
     }
     // Set width of element
   , width: function(width) {
-      return width == null ? this.rx() * 2 : this.rx(new Number(width).divide(2))
+      return width == null ? this.rx() * 2 : this.rx(new svg_Number(width).divide(2))
     }
     // Set height of element
   , height: function(height) {
-      return height == null ? this.ry() * 2 : this.ry(new Number(height).divide(2))
+      return height == null ? this.ry() * 2 : this.ry(new svg_Number(height).divide(2))
     }
     // Custom size function
   , size: function(width, height) {
       var p = proportionalSize(this, width, height)
 
       return this
-        .rx(new Number(p.width).divide(2))
-        .ry(new Number(p.height).divide(2))
+        .rx(new svg_Number(p.width).divide(2))
+        .ry(new svg_Number(p.height).divide(2))
     }
 })

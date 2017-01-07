@@ -1,7 +1,7 @@
-import Element from 'element.js';
-import Parent from 'parent.js';
-import Container from 'container.js';
-import {extend, create} from 'svg.js';
+import Element from './element.js';
+import Parent from './parent.js';
+import Container from './container.js';
+import {extend, create} from './svg.js';
 export default class Bare extends Element{
   constructor(element, inherit){
     // construct element

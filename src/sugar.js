@@ -1,15 +1,15 @@
-import Element from 'element.js';
-import FX from 'fx.js';
-import Parent from 'parent.js';
-import Rect from 'rect.js';
-import {Circle, Ellipse} from 'ellipse.js';
-import Text from 'text.js';
-import Path from 'path.js';
-import Gradient from 'gradient.js';
-import Color from 'color.js';
-import Matrix from 'matrix.js';
-import svg_Number from 'number.js';
-import {extend} from 'svg.js';
+import Element from './element.js';
+import FX from './fx.js';
+import Parent from './parent.js';
+import Rect from './rect.js';
+import {Circle, Ellipse} from './ellipse.js';
+import Text from './text.js';
+import Path from './path.js';
+import Gradient from './gradient.js';
+import Color from './color.js';
+import Matrix from './matrix.js';
+import svg_Number from './number.js';
+import {extend} from './svg.js';
 
 // Define list of available attributes for stroke and fill
 var sugar = {
@@ -51,7 +51,7 @@ extend(Element, FX, {
   // Map skew to transform
 , skew: function(x, y, cx, cy) {
     return arguments.length == 1  || arguments.length == 3 ?
-      this.transform({ skew: x, cx: y, cy: cx }) : 
+      this.transform({ skew: x, cx: y, cy: cx }) :
       this.transform({ skewX: x, skewY: y, cx: cx, cy: cy })
   }
   // Map scale to transform

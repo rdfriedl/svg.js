@@ -1,10 +1,15 @@
-import Element from 'element.js';
-import FX from 'fx.js';
-import Matrix from 'matrix.js';
-import regex from 'regex.js';
-import svg_Number from 'number.js';
-import {extend} from 'svg.js';
-import {arrayToMatrix, ensureCentre} from 'helpers.js';
+import Element from './element.js';
+import FX from './fx.js';
+import Matrix from './matrix.js';
+import regex from './regex.js';
+import svg_Number from './number.js';
+import {extend} from './svg.js';
+import {arrayToMatrix, ensureCentre, capitalize} from './helpers.js';
+
+var SVG
+require('./circularReferenceFix.js').callbacks.push(() => {
+  SVG = require('./index.js')
+})
 
 extend(Element, {
   // Add transformations

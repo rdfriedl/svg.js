@@ -1,6 +1,6 @@
 import svg_Array from './array.js';
 import regex from './regex.js';
-import {extend} from './svg.js';
+import {extend, parser} from './svg.js';
 import {arrayToString} from './helpers.js';
 
 // Path points array
@@ -105,7 +105,7 @@ export default class PathArray extends svg_Array{
   // Absolutize and parse path to array
   parse(array) {
     // if it's already a patharray, no need to parse it
-    if (array instanceof SVG.PathArray) return array.valueOf()
+    if (array instanceof PathArray) return array.valueOf()
 
     // prepare for parsing
     var i, x0, y0, s, seg, arr
@@ -116,13 +116,13 @@ export default class PathArray extends svg_Array{
     if(typeof array == 'string'){
 
       array = array
-        .replace(SVG.regex.negExp, 'X')         // replace all negative exponents with certain char
-        .replace(SVG.regex.pathLetters, ' $& ') // put some room between letters and numbers
-        .replace(SVG.regex.hyphen, ' -')        // add space before hyphen
-        .replace(SVG.regex.comma, ' ')          // unify all spaces
-        .replace(SVG.regex.X, 'e-')             // add back the expoent
+        .replace(regex.negExp, 'X')         // replace all negative exponents with certain char
+        .replace(regex.pathLetters, ' $& ') // put some room between letters and numbers
+        .replace(regex.hyphen, ' -')        // add space before hyphen
+        .replace(regex.comma, ' ')          // unify all spaces
+        .replace(regex.X, 'e-')             // add back the expoent
         .trim()                                 // trim
-        .split(SVG.regex.whitespaces)           // split into array
+        .split(regex.whitespaces)           // split into array
 
       // at this place there could be parts like ['3.124.854.32'] because we could not determine the point as seperator till now
       // we fix this elements in the next loop
@@ -146,7 +146,7 @@ export default class PathArray extends svg_Array{
 
     do{
       // Test if we have a path letter
-      if(SVG.regex.isPathLetter.test(array[0])){
+      if(regex.isPathLetter.test(array[0])){
         s = array[0]
         array.shift()
       // If last letter was a move command and we got no new, it defaults to [L]ine
@@ -235,8 +235,8 @@ export default class PathArray extends svg_Array{
   }
   // Get bounding box of path
   bbox() {
-    SVG.parser.path.setAttribute('d', this.toString())
+    parser.path.setAttribute('d', this.toString())
 
-    return SVG.parser.path.getBBox()
+    return parser.path.getBBox()
   }
 }

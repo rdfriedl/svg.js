@@ -1,9 +1,9 @@
-import svg_Set from 'set.js';
-import {extend, adopt} from 'svg.js';
-import Parent from 'parent.js';
-import Element from 'element';
-import utils from 'utilities.js';
-import {idFromReference} from 'helpers.js';
+import svg_Set from './set.js';
+import {extend, adopt} from './svg.js';
+import Parent from './parent.js';
+import Element from './element';
+import utils from './utilities.js';
+import {idFromReference} from './helpers.js';
 
 // Method for getting an element by id
 export function get(id) {
@@ -30,6 +30,6 @@ extend(Parent, {
 extend(Element, {
   // Get referenced element form attribute value
   reference(attr) {
-    return SVG.get(this.attr(attr))
+    return get(this.attr(attr))
   }
 })

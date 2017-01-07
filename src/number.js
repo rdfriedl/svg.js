@@ -1,4 +1,4 @@
-import regex from 'regex.js';
+import regex from './regex.js';
 
 export default class Number{
   constructor(value, unit){

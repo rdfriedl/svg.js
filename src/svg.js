@@ -1,5 +1,24 @@
-import {capitalize} from 'helpers.js';
-import {eid} from 'ids.js';
+import {capitalize} from './helpers.js';
+import {eid} from './ids.js';
+
+var svg_Set, Doc, Nested, Container, Gradient, Element, SVG;
+require('./circularReferenceFix.js').callbacks.push(() => {
+  svg_Set = require('./set.js').default
+  Doc = require('./doc.js').default
+  Nested = require('./nested.js').default
+  Container = require('./container.js').default
+  Gradient = require('./gradient.js').default
+  Element = require('./element.js').default
+
+  // NOTE: dont import the whole library, maybe have a hash array of element types
+  SVG = require('./index.js')
+
+  // when the document loads, prepare the parser
+  document.addEventListener('DOMContentLoaded', function() {
+    if(!parser.draw)
+      prepare()
+  }, false)
+})
 
 // Default namespaces
 export const ns    = 'http://www.w3.org/2000/svg'
@@ -10,7 +29,7 @@ export const svgjs = 'http://svgjs.com/svgjs'
 // Svg support test
 export const supported = (function() {
   return !! document.createElementNS &&
-         !! document.createElementNS(ns,'svg').createSVGRect
+         !! document.createElementNS(ns,'svg')
 })()
 
 // Method for element creation
@@ -25,11 +44,8 @@ export function create(name) {
 }
 
 // Method for extending objects
-export function extend() {
-  var modules, methods, key, i
-
-  // Get list of modules
-  modules = [].slice.call(arguments)
+export function extend(...modules) {
+  var methods, key, i
 
   // Get object with extensions
   methods = modules.pop()
@@ -40,8 +56,8 @@ export function extend() {
         modules[i].prototype[key] = methods[key]
 
   // Make sure SVG.Set inherits any newly added methods
-  // if (SVG.Set && SVG.Set.inherit)
-  //   SVG.Set.inherit()
+  if (svg_Set && svg_Set.inherit)
+    svg_Set.inherit()
 }
 
 // Invent new element
@@ -63,7 +79,7 @@ export function invent(config) {
 
   // Attach construct method to parent
   if (config.construct)
-    extend(config.parent || SVG.Container, config.construct)
+    extend(config.parent || Container, config.construct)
 
   return initializer
 }
@@ -81,15 +97,15 @@ export function adopt(node) {
 
   // adopt with element-specific settings
   if (node.nodeName == 'svg')
-    element = node.parentNode instanceof SVGElement ? new SVG.Nested : new SVG.Doc
+    element = node.parentNode instanceof SVGElement ? new Nested : new Doc
   else if (node.nodeName == 'linearGradient')
-    element = new SVG.Gradient('linear')
+    element = new Gradient('linear')
   else if (node.nodeName == 'radialGradient')
-    element = new SVG.Gradient('radial')
+    element = new Gradient('radial')
   else if (SVG[capitalize(node.nodeName)])
     element = new SVG[capitalize(node.nodeName)]
   else
-    element = new SVG.Element(node)
+    element = new Element(node)
 
   // ensure references
   element.type  = node.nodeName
@@ -97,7 +113,7 @@ export function adopt(node) {
   node.instance = element
 
   // SVG.Class specific preparations
-  if (element instanceof SVG.Doc)
+  if (element instanceof Doc)
     element.namespace().defs()
 
   // pull svgjs data from the dom (getAttributeNS doesn't work in html5)
@@ -106,27 +122,20 @@ export function adopt(node) {
   return element
 }
 
+export var parser = {}
+
 // Initialize parsing element
 export function prepare(element) {
   // Select document body and create invisible svg element
   var body = document.getElementsByTagName('body')[0]
-    , draw = (body ? new SVG.Doc(body) :  new SVG.Doc(document.documentElement).nested()).size(2, 0)
+    , draw = (body ? new Doc(body) :  new Doc(document.documentElement).nested()).size(2, 0)
 
   // Create parser object
-  SVG.parser = {
-    body: body || document.documentElement
-  , draw: draw.style('opacity:0;position:fixed;left:100%;top:100%;overflow:hidden')
-  , poly: draw.polyline().node
-  , path: draw.path().node
-  , native: SVG.create('svg')
-  }
+  Object.assign(parser, {
+    body: body || document.documentElement,
+    draw: draw.style('opacity:0;position:fixed;left:100%;top:100%;overflow:hidden'),
+    poly: draw.polyline().node,
+    path: draw.path().node,
+    native: create('svg')
+  })
 }
-
-SVG.parser = {
-  native: SVG.create('svg')
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-  if(!SVG.parser.draw)
-    SVG.prepare()
-}, false)

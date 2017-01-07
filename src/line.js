@@ -1,8 +1,8 @@
-import Shape from 'shape.js';
-import Container from 'container.js';
-import PointArray from 'pointarray.js';
-import {create, extend} from 'svg.js';
-import {proportionalSize} from 'helpers.js';
+import Shape from './shape.js';
+import Container from './container.js';
+import PointArray from './pointarray.js';
+import {create, extend} from './svg.js';
+import {proportionalSize} from './helpers.js';
 
 export default class Line extends Shape{
   constructor(){
@@ -21,7 +21,7 @@ export default class Line extends Shape{
     if (typeof y1 !== 'undefined')
       x1 = { x1: x1, y1: y1, x2: x2, y2: y2 }
     else
-      x1 = new SVG.PointArray(x1).toLine()
+      x1 = new PointArray(x1).toLine()
 
     return this.attr(x1)
   }

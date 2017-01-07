@@ -1,6 +1,6 @@
-import Shape from 'shape.js';
-import Container from 'container.js';
-import {extend, create} from 'svg.js';
+import Shape from './shape.js';
+import Container from './container.js';
+import {extend, create} from './svg.js';
 export default class Rect extends Shape{
   constructor(){
     super(create('rect'));

@@ -1,7 +1,12 @@
-import svg_Number from 'number.js';
-import defaults from 'default.js';
-import {adopt} from 'svg.js';
-import {proportionalSize, assignNewId, matches} from 'helpers.js';
+import svg_Number from './number.js';
+import defaults from './default.js';
+import {adopt} from './svg.js';
+import {proportionalSize, assignNewId, matches} from './helpers.js';
+
+var Doc
+require('./circularReferenceFix.js').callbacks.push(() => {
+  Doc = require('./doc.js').default
+})
 
 export default class Element{
   constructor(node){
@@ -27,7 +32,7 @@ export default class Element{
   }
   // Move over y-axis
   y(y) {
-     return this.attr('y', y)
+    return this.attr('y', y)
   }
   // Move by center over x-axis
   cx(x) {
@@ -51,7 +56,7 @@ export default class Element{
   }
   // Set height of element
   height(height) {
-     return this.attr('height', height)
+    return this.attr('height', height)
   }
   // Set element size to given width and height
   size(width, height) {
@@ -176,7 +181,7 @@ export default class Element{
   }
   // Get parent document
   doc() {
-    return this instanceof SVG.Doc ? this : this.parent(SVG.Doc)
+    return this instanceof Doc ? this : this.parent(Doc)
   }
   // return array of all ancestors of given type up to the root svg
   parents(type) {

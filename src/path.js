@@ -1,8 +1,8 @@
-import Shape from 'shape.js';
-import Container from 'container.js';
-import PathArray from 'patharray.js';
-import {extend, create} from 'svg.js';
-import {proportionalSize} from 'helpers.js';
+import Shape from './shape.js';
+import Container from './container.js';
+import PathArray from './patharray.js';
+import {extend, create} from './svg.js';
+import {proportionalSize} from './helpers.js';
 
 export default class Path extends Shape{
   constructor(){

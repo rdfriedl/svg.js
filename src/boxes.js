@@ -1,7 +1,7 @@
-import Element from 'element.js';
-import Shape from 'shape.js';
-import {extend} from 'svg.js';
-import {fullBox} from 'helpers.js';
+import Element from './element.js';
+import Shape from './shape.js';
+import {extend, parser} from './svg.js';
+import {fullBox} from './helpers.js';
 export class BBox{
   constructor(element){
     // get values if element is given
@@ -17,8 +17,8 @@ export class BBox{
         // find native bbox
         box = element.node.getBBox()
       } catch(e) {
-        if(element instanceof SVG.Shape){
-          var clone = element.clone(SVG.parser.draw).show()
+        if(element instanceof Shape){
+          var clone = element.clone(parser.draw).show()
           box = clone.bbox()
           clone.remove()
         }else{

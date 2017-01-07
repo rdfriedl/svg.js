@@ -1,27 +1,7 @@
-const path = require('path');
-const webpack = require("webpack");
-
-module.exports = {
-    resolve: {
-        extensions: ['', '.js'],
-        root: [
-            path.resolve('./src/')
-        ]
-    },
-    entry: {
-        svg: './src/index.js'
-    },
-    output: {
-        filename: "[name].js",
-        library: "SVG",
-        libraryTarget: "umd"
-    },
-    module: {
-        loaders: [
-            {
-                test: /\.js$/,
-                loader: 'babel'
-            }
-        ]
-    }
-}
+if(process.env.NODE_ENV == 'production')
+    module.exports = [
+        require('./.config/webpack.prod.config.js'),
+        require('./.config/webpack.min.config.js')
+    ]
+else
+    module.exports = require('./.config/webpack.dev.config.js');
